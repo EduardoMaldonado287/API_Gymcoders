@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const getConnection = require('./database.js');
-const todosController = require('./controllers/todos.controller');
+const getConnection = require('./helpers/database.js');
+const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/todos', todosController);
+app.use('/centro_deportivo', centroDeportivoController);
 
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
