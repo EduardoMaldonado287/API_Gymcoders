@@ -1,6 +1,7 @@
 const execQuery = require('../helpers/execQuery');
 const TYPES = require('tedious').TYPES;
 
+
 const allCentroDeportivo = () => {
     const query = `
         SELECT * FROM [dbo].[centro_deportivo]
@@ -53,10 +54,19 @@ const updateCentroDeportivo = (centroDeportivoData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+const getLastId = () => {
+    const query = `
+      SELECT MAX(id_centro_deportivo) AS lastId
+      FROM [dbo].[Centro_Deportivo]
+    `;
+    return execQuery.execReadCommand(query);
+  };  
+
 
 module.exports = {
     allCentroDeportivo,
     deleteCentroDeportivo,
     addCentroDeportivo,
     updateCentroDeportivo,
+    getLastId,
 };

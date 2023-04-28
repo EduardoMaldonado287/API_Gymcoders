@@ -1,13 +1,22 @@
 const centroDeportivoRoute = require('express').Router();
 const centroDeportivoModel = require('../models/centro_deportivo.model');
-const bodyParser = require('body-parser');
 
-centroDeportivoRoute.use(bodyParser.urlencoded({ extended: true }));
-centroDeportivoRoute.use(bodyParser.json());
+
+// const express = require('express');
+
+// const bodyParser = require('body-parser');
+// centroDeportivoRoute.use(bodyParser.json());
+// centroDeportivoRoute.use(bodyParser.urlencoded({ extended: false}));
+
+// centroDeportivoRoute.use(express.json());       
+// centroDeportivoRoute.use(express.urlencoded({extended: true})); 
+
+
 
 centroDeportivoRoute.get('/', async(req, res) => {
     centroDeportivoModel.allCentroDeportivo()
     .then(data => {
+        // res.json("RUTA 0");
         res.status(200).json({ data });
     })
     .catch(error => {
@@ -29,28 +38,66 @@ centroDeportivoRoute.delete('/:id', async (req, res) => {
 });
 
 centroDeportivoRoute.post('/', async (req, res) => {
-    const {
-        id_centro_deportivo,
-        nombre,
-    } = req.body;
-    centroDeportivoModel.addCentroDeportivo({
-        id_centro_deportivo,
-        nombre,
-    })
-    .then((rowCount, more) => {
-        res.status(200).json(
-            {
-            data: {
-                rowCount,
-                more,
-                id_centro_deportivo,
-            } 
+    try {
+        const lastIdResult = await centroDeportivoModel.getLastId();
+        const lastId = lastIdResult[0].lastId;
+        const id_centro_deportivo = lastId + 1;
+        const {
+            nombre,
+        } = req.body;
+        await centroDeportivoModel.addCentroDeportivo({
+            id_centro_deportivo,
+            nombre,
+        })
+        .then((rowCount, more) => {
+            res.status(200).json(
+                {
+                data: {
+                    rowCount,
+                    more,
+                    id_centro_deportivo,
+                    nombre,
+                } 
+            });
+        })
+        .catch(error => {
+            res.status(500).json({error});
         });
-    })
-    .catch(error => {
-        res.status(500).json({error});
-    });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
 });
+
+// centroDeportivoRoute.post('/image', async (req, res) => {
+//     try {
+//         const lastIdResult = await centroDeportivoModel.getLastId();
+//         const lastId = lastIdResult[0].lastId;
+//         const id_centro_deportivo = lastId + 1;
+//         const {
+//             nombre,
+//         } = req.body;
+//         await centroDeportivoModel.addCentroDeportivo({
+//             id_centro_deportivo,
+//             nombre,
+//         })
+//         .then((rowCount, more) => {
+//             res.status(200).json(
+//                 {
+//                 data: {
+//                     rowCount,
+//                     more,
+//                     id_centro_deportivo,
+//                     nombre,
+//                 } 
+//             });
+//         })
+//         .catch(error => {
+//             res.status(500).json({error});
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error });
+//     }
+// });
 
 centroDeportivoRoute.put('/:id', async (req, res) => {
     const {id: id_centro_deportivo} = req.params;
