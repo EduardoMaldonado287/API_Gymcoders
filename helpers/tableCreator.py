@@ -1,5 +1,6 @@
 import re, time
 className = input("Ingrese el nombre de la clase: \n")
+classId = input("Ingrese el nombre del id de la clase: \n")
 
 attributes = []
 counter = 0
@@ -18,7 +19,7 @@ classNameRoute = className + "Route"
 classNameModel = className + "Model"
 classSpaced = re.sub('([A-Z])', r'_\1', className).lower()
 
-classId = "id_" + classSpaced
+# classId = "id_" + classSpaced
 
 tb = "    "
 
@@ -66,7 +67,7 @@ def printController():
                     data: {
                         rowCount,
                         more,\n""" +
-                        tb*5 + classId +
+                        tb*6 + classId +
                         """
                     } 
                 });
@@ -117,7 +118,7 @@ def printController():
                 data: {
                     rowCount,
                     more,\n""" +
-                    tb*4 + classId +
+                    tb*5 + classId +
                     """
                 },
             });
@@ -249,6 +250,6 @@ def printModel():
     print("};")    
     
 printModel()
-time.sleep(15)
+time.sleep(10)
 print("\n" * 20)
 printController()

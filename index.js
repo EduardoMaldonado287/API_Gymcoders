@@ -10,6 +10,16 @@ const alumnoController = require('./controllers/alumno.controller.js');
 const administradorController = require('./controllers/administrador.controller.js');
 const avisosController = require('./controllers/avisos.controller.js');
 
+const intervaloTiempoController = require('./controllers/intervalo_tiempo.controller.js');
+const horariosDisponiblesController = require('./controllers/horarios_disponibles.controller.js');
+const instalacionController = require('./controllers/instalacion.controller.js');
+const participantesController = require('./controllers/participantes.controller.js');
+
+const reservacionController = require('./controllers/reservacion.controller.js');
+const calificacionInstalacionController = require('./controllers/calificacion_instalacion.controller.js');
+const registroGimnasioController = require('./controllers/registro_gimnasio.controller.js');
+const gimnasioController = require('./controllers/gimnasio.controller.js');
+
 dotenv.config();
 
 const {
@@ -42,6 +52,16 @@ app.use('/centro_deportivo', centroDeportivoController);
 app.use('/alumno', alumnoController);
 app.use('/administrador', administradorController);
 app.use('/avisos', avisosController);
+
+app.use('/intervalo_tiempo', intervaloTiempoController);
+app.use('/horarios_disponibles', horariosDisponiblesController);
+app.use('/instalacion', instalacionController);
+app.use('/participantes', participantesController);
+
+app.use('/reservacion', reservacionController);
+app.use('/calificacion_instalacion', calificacionInstalacionController);
+app.use('/registro_gimnasio', registroGimnasioController);
+app.use('/gimnasio', gimnasioController);
 
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
