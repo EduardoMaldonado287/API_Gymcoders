@@ -1,14 +1,20 @@
 const centroDeportivoRoute = require('express').Router(); 
 const centroDeportivoModel = require('../models/centro_deportivo.model');
 
-centroDeportivoRoute.post('/', async (req, res) => {
+const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
+
+centroDeportivoRoute.post('/', uploadStrategy, async (req, res) => {
+    const blobName = getBlobName(req.file.originalname);
+    addImage(blobName, req.file.buffer, req.file.buffer.length);
+
     try {
         const lastIdResult = await centroDeportivoModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_centro_deportivo = lastId + 1;
+        const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+
         const {
             nombre,
-            imagen,
             ubicacion
         } = req.body;
         await centroDeportivoModel.addCentroDeportivo({
@@ -23,7 +29,7 @@ centroDeportivoRoute.post('/', async (req, res) => {
                 data: {
                     rowCount,
                     more,
-                id_centro_deportivo
+                    id_centro_deportivo
                 }
             });
         })
@@ -45,11 +51,14 @@ centroDeportivoRoute.get('/', async(req, res) => {
     });
 });
 
-centroDeportivoRoute.put('/:id', async (req, res) => {
+centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
+    const blobName = getBlobName(req.file.originalname);
+    addImage(blobName, req.file.buffer, req.file.buffer.length);
+    const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+
     const {id: id_centro_deportivo} = req.params;
     const {
             nombre,
-            imagen,
             ubicacion
     } = req.body;
     centroDeportivoModel.updateCentroDeportivo({

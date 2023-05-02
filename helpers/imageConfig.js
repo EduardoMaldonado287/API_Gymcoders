@@ -14,6 +14,20 @@ const getBlobName = originalName => {
     return `${identifier}-${originalName}`;
   };
 
+function addImage(blobName, stream, streamLength)
+{
+  blobService.createBlockBlobFromStream(containerName, blobName, getStream(stream), streamLength, err => {
+    if (err){
+      console.log(err);
+      return false;
+    } else {
+        console.log("Imagen subida exitosamente");
+        return true;
+    }
+  })
+  return true;
+}
+
 module.exports = {
     multer,
     inMemoryStorage,
@@ -24,4 +38,5 @@ module.exports = {
     containerName,
     getStream,
     getBlobName,
+    addImage,
 };

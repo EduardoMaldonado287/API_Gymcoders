@@ -8,12 +8,13 @@ const addAlumno = (alumnoData) => {
     } = alumnoData;
 
     const query = `
-        INSERT INTO [dbo].[alumno] (matricula, password)
-        VALUES (@matricula, @password)
+        INSERT INTO [dbo].[alumno] (matricula, password, nombre)
+        VALUES (@matricula, @password, @nombre)
     `;
     const parameters = [
         {name: 'matricula', type: TYPES.VarChar, value: matricula},
         {name: 'password', type: TYPES.VarChar, value: password},
+        {name: 'nombre', type: TYPES.VarChar, value: nombre},
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

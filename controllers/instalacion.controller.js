@@ -1,11 +1,16 @@
 const instalacionRoute = require('express').Router();
 const instalacionModel = require('../models/instalacion.model');
+const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
-instalacionRoute.post('/', async (req, res) => {
+instalacionRoute.post('/', uploadStrategy, async (req, res) => {
+    const blobName = getBlobName(req.file.originalname);
+    addImage(blobName, req.file.buffer, req.file.buffer.length);
+
     try {
         const lastIdResult = await instalacionModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_instalacion = lastId + 1;
+        const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
         const {
             id_centro_deportivo,
             id_intervalo,
@@ -22,6 +27,7 @@ instalacionRoute.post('/', async (req, res) => {
             id_horario,
             nombre,
             deporte,
+            imagen,
             esta_habilitada,
             cantidad_canchas
         })
@@ -53,7 +59,23 @@ instalacionRoute.get('/', async(req, res) => {
         });
     });
 
-instalacionRoute.put('/:id', async (req, res) => {
+instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
+    function hasImageFile(){
+        try{
+            const testVar = getBlobName(req.file.originalname);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    var imagen;
+    if (hasImageFile() == true){
+        const blobName = getBlobName(req.file.originalname);
+        imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+        addImage(blobName, req.file.buffer, req.file.buffer.length);
+    }
+
     const {id: id_instalacion} = req.params;
     const {
             id_centro_deportivo,
@@ -71,6 +93,7 @@ instalacionRoute.put('/:id', async (req, res) => {
             id_horario,
             nombre,
             deporte,
+            imagen,
             esta_habilitada,
             cantidad_canchas
     })
