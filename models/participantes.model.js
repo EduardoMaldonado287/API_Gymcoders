@@ -26,24 +26,24 @@ const allParticipantes = () => {
     return execQuery.execReadCommand(query);
 };
 
-const updateParticipantes = (participantesData) => {
-    const {
-        id_participantes,
-        id_reservacion,
-        matricula
-    } = participantesData;
-    const query = `
-        UPDATE [dbo].[participantes]
-        SET id_reservacion = @id_reservacion, matricula = @matricula
-        WHERE id_participantes = @id_participantes
-    `;
-    const parameters = [
-        {name: 'id_participantes', type: TYPES.Int, value: id_participantes},
-        {name: 'id_reservacion', type: TYPES.VarChar, value: id_reservacion},
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-    ];
-    return execQuery.execWriteCommand(query, parameters);
-};
+// const updateParticipantes = (participantesData) => {
+//     const {
+//         id_participantes,
+//         id_reservacion,
+//         matricula
+//     } = participantesData;
+//     const query = `
+//         UPDATE [dbo].[participantes]
+//         SET id_reservacion = @id_reservacion, matricula = @matricula
+//         WHERE id_participantes = @id_participantes
+//     `;
+//     const parameters = [
+//         {name: 'id_participantes', type: TYPES.Int, value: id_participantes},
+//         {name: 'id_reservacion', type: TYPES.VarChar, value: id_reservacion},
+//         {name: 'matricula', type: TYPES.VarChar, value: matricula},
+//     ];
+//     return execQuery.execWriteCommand(query, parameters);
+// };
 
 const deleteParticipantes = (id_participantes) => {
     const query = `
@@ -67,7 +67,7 @@ const getLastId = () => {
 module.exports = {
     addParticipantes,
     allParticipantes,
-    updateParticipantes,
+    // updateParticipantes,
     deleteParticipantes,
     getLastId,
 };

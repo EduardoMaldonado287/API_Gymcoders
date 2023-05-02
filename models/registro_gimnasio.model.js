@@ -43,29 +43,30 @@ const allRegistroGimnasio = () => {
 //     return execQuery.execWriteCommand(query, parameters);
 // };
 
-// const deleteRegistroGimnasio = (id_registro) => {
-//     const query = `
-//         DELETE FROM [dbo].[registro_gimnasio]
-//         WHERE id_registro= @id_registro
-//     `;
-//     const parameters = [
-//         {name: 'id_registro', type: TYPES.Int, value: id_registro}
-//     ];
-//     return execQuery.execWriteCommand(query, parameters);
-// };
+// Eliminar al final del proyecto 
+const deleteRegistroGimnasio = (id_registro) => {
+    const query = `
+        DELETE FROM [dbo].[registro_gimnasio]
+        WHERE id_registro= @id_registro
+    `;
+    const parameters = [
+        {name: 'id_registro', type: TYPES.Int, value: id_registro}
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
 
-// const getLastId = () => {
-//     const query = `
-//         SELECT MAX(id_registro) AS lastId
-//         FROM [dbo].[registro_gimnasio]
-//     `;
-//     return execQuery.execReadCommand(query);
-// };
+const getLastId = () => {
+    const query = `
+        SELECT MAX(id_registro) AS lastId
+        FROM [dbo].[registro_gimnasio]
+    `;
+    return execQuery.execReadCommand(query);
+};
 
 module.exports = {
     addRegistroGimnasio,
     allRegistroGimnasio,
     // updateRegistroGimnasio,
     // deleteRegistroGimnasio,
-    // getLastId,
+    getLastId,
 };

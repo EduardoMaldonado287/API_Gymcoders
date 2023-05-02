@@ -80,6 +80,7 @@ reservacionRoute.put('/:id', async (req, res) => {
         });
     });
 
+// eliminar al final del proyecto
 reservacionRoute.delete('/:id', async (req, res) => {
     const {id: id_reservacion} = req.params;
     reservacionModel.deleteReservacion(id_reservacion)

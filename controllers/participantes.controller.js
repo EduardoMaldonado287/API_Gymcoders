@@ -43,30 +43,30 @@ participantesRoute.get('/', async(req, res) => {
         });
     });
 
-participantesRoute.put('/:id', async (req, res) => {
-    const {id: id_participantes} = req.params;
-    const {
-            id_reservacion,
-            matricula
-    } = req.body;
-    participantesModel.updateParticipantes({
-            id_participantes,
-            id_reservacion,
-            matricula
-    })
-    .then((rowCount, more) => {
-            res.status(200).json({
-                data: {
-                    rowCount,
-                    more,
-                    id_participantes
-                },
-            });
-        })
-        .catch(error => {
-            res.status(500).json({error});
-        });
-    });
+// participantesRoute.put('/:id', async (req, res) => {
+//     const {id: id_participantes} = req.params;
+//     const {
+//             id_reservacion,
+//             matricula
+//     } = req.body;
+//     participantesModel.updateParticipantes({
+//             id_participantes,
+//             id_reservacion,
+//             matricula
+//     })
+//     .then((rowCount, more) => {
+//             res.status(200).json({
+//                 data: {
+//                     rowCount,
+//                     more,
+//                     id_participantes
+//                 },
+//             });
+//         })
+//         .catch(error => {
+//             res.status(500).json({error});
+//         });
+//     });
 
 participantesRoute.delete('/:id', async (req, res) => {
     const {id: id_participantes} = req.params;

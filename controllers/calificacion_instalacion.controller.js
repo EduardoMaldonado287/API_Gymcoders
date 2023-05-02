@@ -45,33 +45,34 @@ calificacionInstalacionRoute.get('/', async(req, res) => {
         });
     });
 
-calificacionInstalacionRoute.put('/:id', async (req, res) => {
-    const {id: id_calificacion} = req.params;
-    const {
-            id_reservacion,
-            calificacion,
-            comentarios
-    } = req.body;
-    calificacionInstalacionModel.updateCalificacionInstalacion({
-            id_calificacion,
-            id_reservacion,
-            calificacion,
-            comentarios
-    })
-    .then((rowCount, more) => {
-            res.status(200).json({
-                data: {
-                    rowCount,
-                    more,
-                    id_calificacion
-                },
-            });
-        })
-        .catch(error => {
-            res.status(500).json({error});
-        });
-    });
+// calificacionInstalacionRoute.put('/:id', async (req, res) => {
+//     const {id: id_calificacion} = req.params;
+//     const {
+//             id_reservacion,
+//             calificacion,
+//             comentarios
+//     } = req.body;
+//     calificacionInstalacionModel.updateCalificacionInstalacion({
+//             id_calificacion,
+//             id_reservacion,
+//             calificacion,
+//             comentarios
+//     })
+//     .then((rowCount, more) => {
+//             res.status(200).json({
+//                 data: {
+//                     rowCount,
+//                     more,
+//                     id_calificacion
+//                 },
+//             });
+//         })
+//         .catch(error => {
+//             res.status(500).json({error});
+//         });
+//     });
 
+// Eliminar al final del proyecto
 calificacionInstalacionRoute.delete('/:id', async (req, res) => {
     const {id: id_calificacion} = req.params;
     calificacionInstalacionModel.deleteCalificacionInstalacion(id_calificacion)

@@ -57,6 +57,7 @@ const updateReservacion = (reservacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+// Eliminar al final del proyecto
 const deleteReservacion = (id_reservacion) => {
     const query = `
         DELETE FROM [dbo].[reservacion]

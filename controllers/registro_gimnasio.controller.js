@@ -60,15 +60,16 @@ registroGimnasioRoute.get('/', async(req, res) => {
 //         });
 //     });
 
-// registroGimnasioRoute.delete('/:id', async (req, res) => {
-//     const {id: id_registro} = req.params;
-//     registroGimnasioModel.deleteRegistroGimnasio(id_registro)
-//     .then((rowCount, more) => {
-//             res.status(200).json({ rowCount, more });
-//         })
-//         .catch(error => {
-//             res.status(500).json({ error });
-//         })
-//     });
+// Eliminar al final del proyecto
+registroGimnasioRoute.delete('/:id', async (req, res) => {
+    const {id: id_registro} = req.params;
+    registroGimnasioModel.deleteRegistroGimnasio(id_registro)
+    .then((rowCount, more) => {
+            res.status(200).json({ rowCount, more });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        })
+    });
 
 module.exports = registroGimnasioRoute;
