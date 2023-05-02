@@ -1,4 +1,4 @@
-const centroDeportivoRoute = require('express').Router();
+const centroDeportivoRoute = require('express').Router(); 
 const centroDeportivoModel = require('../models/centro_deportivo.model');
 
 centroDeportivoRoute.post('/', async (req, res) => {
@@ -9,12 +9,12 @@ centroDeportivoRoute.post('/', async (req, res) => {
         const {
             nombre,
             imagen,
-            ubicacion,
+            ubicacion
         } = req.body;
         await centroDeportivoModel.addCentroDeportivo({
             id_centro_deportivo,
             nombre,
-            imagen, 
+            imagen,
             ubicacion
         })
         .then((rowCount, more) => {
@@ -23,8 +23,8 @@ centroDeportivoRoute.post('/', async (req, res) => {
                 data: {
                     rowCount,
                     more,
-                    id_centro_deportivo,
-                } 
+                id_centro_deportivo
+                }
             });
         })
         .catch(error => {
@@ -48,22 +48,22 @@ centroDeportivoRoute.get('/', async(req, res) => {
 centroDeportivoRoute.put('/:id', async (req, res) => {
     const {id: id_centro_deportivo} = req.params;
     const {
-        nombre,
-        imagen,
-        ubicacion
+            nombre,
+            imagen,
+            ubicacion
     } = req.body;
     centroDeportivoModel.updateCentroDeportivo({
-        id_centro_deportivo,
-        nombre,
-        imagen,
-        ubicacion
+            id_centro_deportivo,
+            nombre,
+            imagen,
+            ubicacion
     })
     .then((rowCount, more) => {
         res.status(200).json({
             data: {
                 rowCount,
                 more,
-                id_centro_deportivo,
+                id_centro_deportivo
             },
         });
     })

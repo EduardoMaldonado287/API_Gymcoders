@@ -2,10 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const getConnection = require('./helpers/database.js');
-const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
-const alumnoController = require('./controllers/alumno.controller.js')
 const bodyParser = require('body-parser');
 const path = require('path')
+
+const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
+const alumnoController = require('./controllers/alumno.controller.js');
+const administradorController = require('./controllers/administrador.controller.js');
+const avisosController = require('./controllers/avisos.controller.js');
 
 dotenv.config();
 
@@ -37,6 +40,8 @@ app.use((req, res, next) => {
 
 app.use('/centro_deportivo', centroDeportivoController);
 app.use('/alumno', alumnoController);
+app.use('/administrador', administradorController);
+app.use('/avisos', avisosController);
 
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);

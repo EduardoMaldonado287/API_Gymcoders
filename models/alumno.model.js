@@ -56,8 +56,8 @@ const deleteAlumno = (matricula) => {
 };
 
 module.exports = {
-    allAlumno,
     addAlumno,
+    allAlumno,
     updateAlumno,
     deleteAlumno,
 };

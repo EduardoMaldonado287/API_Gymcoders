@@ -5,10 +5,9 @@ const addCentroDeportivo = (centroDeportivoData) => {
     const {
         id_centro_deportivo,
         nombre,
-        imagen, 
-        ubicacion,
+        imagen,
+        ubicacion
     } = centroDeportivoData;
-
     const query = `
         INSERT INTO [dbo].[centro_deportivo] (id_centro_deportivo, nombre, imagen, ubicacion)
         VALUES (@id_centro_deportivo, @nombre, @imagen, @ubicacion)
@@ -33,12 +32,12 @@ const updateCentroDeportivo = (centroDeportivoData) => {
     const {
         id_centro_deportivo,
         nombre,
-        imagen, 
-        ubicacion,
+        imagen,
+        ubicacion
     } = centroDeportivoData;
     const query = `
         UPDATE [dbo].[centro_deportivo]
-        SET nombre=@nombre, imagen=@imagen, ubicacion=@ubicacion
+        SET nombre = @nombre, imagen = @imagen, ubicacion = @ubicacion
         WHERE id_centro_deportivo = @id_centro_deportivo
     `;
     const parameters = [
@@ -53,7 +52,7 @@ const updateCentroDeportivo = (centroDeportivoData) => {
 const deleteCentroDeportivo = (id_centro_deportivo) => {
     const query = `
         DELETE FROM [dbo].[centro_deportivo]
-        WHERE id_centro_deportivo = @id_centro_deportivo
+        WHERE id_centro_deportivo= @id_centro_deportivo
     `;
     const parameters = [
         {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo}
@@ -63,17 +62,16 @@ const deleteCentroDeportivo = (id_centro_deportivo) => {
 
 const getLastId = () => {
     const query = `
-      SELECT MAX(id_centro_deportivo) AS lastId
-      FROM [dbo].[Centro_Deportivo]
+        SELECT MAX(id_centro_deportivo) AS lastId
+        FROM [dbo].[centro_deportivo]
     `;
     return execQuery.execReadCommand(query);
-  };  
-
+};
 
 module.exports = {
-    allCentroDeportivo,
-    deleteCentroDeportivo,
     addCentroDeportivo,
+    allCentroDeportivo,
     updateCentroDeportivo,
+    deleteCentroDeportivo,
     getLastId,
 };
