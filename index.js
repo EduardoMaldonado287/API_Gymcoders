@@ -48,6 +48,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+
 app.use('/centro_deportivo', centroDeportivoController);
 app.use('/alumno', alumnoController);
 app.use('/administrador', administradorController);
@@ -66,3 +70,4 @@ app.use('/gimnasio', gimnasioController);
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
 });
+
