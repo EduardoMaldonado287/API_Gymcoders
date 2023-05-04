@@ -51,6 +51,18 @@ centroDeportivoRoute.get('/', async(req, res) => {
     });
 });
 
+centroDeportivoRoute.get('/:id', async(req, res) => {
+    const {id: id_centro_deportivo} = req.params;
+    centroDeportivoModel.getByIDcentroDeportivo(id_centro_deportivo)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
+
 centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
     const blobName = getBlobName(req.file.originalname);
     addImage(blobName, req.file.buffer, req.file.buffer.length);
