@@ -39,6 +39,17 @@ alumnoRoute.get('/', async(req, res) => {
     });
 });
 
+alumnoRoute.get('/:id/reservaciones', async(req, res) => {
+    const {id: matricula} = req.params;
+    alumnoModel.getReservaciones(matricula)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
 alumnoRoute.put('/:id', uploadStrategy, async (req, res) => {
     const blobName = getBlobName(req.file.originalname);
     if (addImage(blobName, req.file.buffer, req.file.buffer.length) == true)

@@ -26,6 +26,17 @@ const allAlumno = () => {
     return execQuery.execReadCommand(query);
 }; 
 
+const getReservaciones = (matricula) => {
+    const query = `
+        select * from reservacion
+        where matricula = @matricula
+    `;
+    const parameters = [
+        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+    ];
+    return execQuery.execReadCommand(query, parameters);
+}; 
+
 const updateAlumno = (alumnoData) => {
     const {
         matricula,
@@ -59,6 +70,7 @@ const deleteAlumno = (matricula) => {
 module.exports = {
     addAlumno,
     allAlumno,
+    getReservaciones,
     updateAlumno,
     deleteAlumno,
 };
