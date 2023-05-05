@@ -38,6 +38,19 @@ const allInstalacion = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getByIDinstalacion = (id_instalacion) => {
+    const query = `
+        SELECT * FROM [dbo].[instalacion]
+        WHERE id_instalacion = @id_instalacion
+    `;
+
+    const parameters = [
+        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const updateInstalacion = (instalacionData) => {
     const {
         id_instalacion,
@@ -91,6 +104,7 @@ const getLastId = () => {
 module.exports = {
     addInstalacion,
     allInstalacion,
+    getByIDinstalacion,
     updateInstalacion,
     deleteInstalacion,
     getLastId,

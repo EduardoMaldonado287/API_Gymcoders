@@ -41,6 +41,19 @@ const getByIDcentroDeportivo = (id_centro_deportivo) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+const getInstalacionesInCentroDeportivo = (id_centro_deportivo) => {
+    const query = `
+        select * from [dbo].instalacion
+        where id_centro_deportivo = @id_centro_deportivo
+    `;
+
+    const parameters = [
+        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const updateCentroDeportivo = (centroDeportivoData) => {
     const {
         id_centro_deportivo,
@@ -85,6 +98,7 @@ module.exports = {
     addCentroDeportivo,
     allCentroDeportivo,
     getByIDcentroDeportivo,
+    getInstalacionesInCentroDeportivo,
     updateCentroDeportivo,
     deleteCentroDeportivo,
     getLastId,

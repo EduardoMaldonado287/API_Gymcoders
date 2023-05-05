@@ -59,6 +59,18 @@ instalacionRoute.get('/', async(req, res) => {
         });
     });
 
+instalacionRoute.get('/:id', async(req, res) => {
+    const {id: id_instalacion} = req.params;
+    instalacionModel.getByIDinstalacion(id_instalacion)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
+
 instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     function hasImageFile(){
         try{

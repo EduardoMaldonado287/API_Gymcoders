@@ -49,6 +49,17 @@ reservacionRoute.get('/', async(req, res) => {
         });
     });
 
+reservacionRoute.get('/:id', async(req, res) => {
+    const {id: id_reservacion} = req.params;
+    reservacionModel.getByIDreservacion(id_reservacion)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
 reservacionRoute.put('/:id', async (req, res) => {
     const {id: id_reservacion} = req.params;
     const {

@@ -32,6 +32,19 @@ const allReservacion = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getByIDreservacion = (id_reservacion) => {
+    const query = `
+        SELECT * FROM [dbo].[reservacion]
+        WHERE id_reservacion = @id_reservacion
+    `;
+
+    const parameters = [
+        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const updateReservacion = (reservacionData) => {
     const {
         id_reservacion,
@@ -80,6 +93,7 @@ const getLastId = () => {
 module.exports = {
     addReservacion,
     allReservacion,
+    getByIDreservacion,
     updateReservacion,
     deleteReservacion,
     getLastId,
