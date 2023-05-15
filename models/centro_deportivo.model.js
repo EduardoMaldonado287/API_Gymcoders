@@ -6,17 +6,19 @@ const addCentroDeportivo = (centroDeportivoData) => {
         id_centro_deportivo,
         nombre,
         imagen,
-        ubicacion
+        ubicacion,
+        esta_habilitado
     } = centroDeportivoData;
     const query = `
-        INSERT INTO [dbo].[centro_deportivo] (id_centro_deportivo, nombre, imagen, ubicacion)
-        VALUES (@id_centro_deportivo, @nombre, @imagen, @ubicacion)
+        INSERT INTO [dbo].[centro_deportivo] (id_centro_deportivo, nombre, imagen, ubicacion, esta_habilitado)
+        VALUES (@id_centro_deportivo, @nombre, @imagen, @ubicacion, @esta_habilitado)
     `;
     const parameters = [
         {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
         {name: 'nombre', type: TYPES.VarChar, value: nombre},
         {name: 'imagen', type: TYPES.VarChar, value: imagen},
         {name: 'ubicacion', type: TYPES.VarChar, value: ubicacion},
+        {name: 'esta_habilitado', type: TYPES.Bit, value: esta_habilitado},
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -54,16 +56,33 @@ const getInstalacionesInCentroDeportivo = (id_centro_deportivo) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+const getDeportesInCentroDeportivo = (id_centro_deportivo) => {
+    const query = `
+        SELECT DISTINCT deporte.*
+        FROM Centro_Deportivo centro
+        INNER JOIN Instalacion instalacion ON centro.id_centro_deportivo = instalacion.id_centro_deportivo
+        INNER JOIN Deporte deporte ON instalacion.id_deporte = deporte.id_deporte
+        WHERE centro.id_centro_deportivo = @id_centro_deportivo;
+    `;
+
+    const parameters = [
+        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const updateCentroDeportivo = (centroDeportivoData) => {
     const {
         id_centro_deportivo,
         nombre,
         imagen,
-        ubicacion
+        ubicacion,
+        esta_habilitado
     } = centroDeportivoData;
     const query = `
         UPDATE [dbo].[centro_deportivo]
-        SET nombre = @nombre, imagen = @imagen, ubicacion = @ubicacion
+        SET nombre = @nombre, imagen = @imagen, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado
         WHERE id_centro_deportivo = @id_centro_deportivo
     `;
     const parameters = [
@@ -71,6 +90,8 @@ const updateCentroDeportivo = (centroDeportivoData) => {
         {name: 'nombre', type: TYPES.VarChar, value: nombre},
         {name: 'imagen', type: TYPES.VarChar, value: imagen},
         {name: 'ubicacion', type: TYPES.VarChar, value: ubicacion},
+        {name: 'esta_habilitado', type: TYPES.Bit, value: esta_habilitado},
+
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -99,6 +120,7 @@ module.exports = {
     allCentroDeportivo,
     getByIDcentroDeportivo,
     getInstalacionesInCentroDeportivo,
+    getDeportesInCentroDeportivo,
     updateCentroDeportivo,
     deleteCentroDeportivo,
     getLastId,

@@ -21,6 +21,8 @@ const calificacionInstalacionController = require('./controllers/calificacion_in
 const registroGimnasioController = require('./controllers/registro_gimnasio.controller.js');
 const gimnasioController = require('./controllers/gimnasio.controller.js');
 
+const deporteController = require('./controllers/deporte.controller.js')
+
 dotenv.config();
 
 const {
@@ -68,7 +70,10 @@ app.use('/calificacion_instalacion', calificacionInstalacionController);
 app.use('/registro_gimnasio', registroGimnasioController);
 app.use('/gimnasio', gimnasioController);
 
+app.use('/deporte', deporteController);
+
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
 });
+
 

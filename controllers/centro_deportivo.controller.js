@@ -15,12 +15,14 @@ centroDeportivoRoute.post('/', uploadStrategy, async (req, res) => {
 
         const {
             nombre,
-            ubicacion
+            ubicacion,
+            esta_habilitado
         } = req.body;
         await centroDeportivoModel.addCentroDeportivo({
             id_centro_deportivo,
             nombre,
             imagen,
+            esta_habilitado,
             ubicacion
         })
         .then((rowCount, more) => {
@@ -73,6 +75,17 @@ centroDeportivoRoute.get('/:id/instalaciones', async(req, res) => {
     });
 });
 
+centroDeportivoRoute.get('/:id/deportes', async(req, res) => {
+    const {id: id_centro_deportivo} = req.params;
+    centroDeportivoModel.getDeportesInCentroDeportivo(id_centro_deportivo)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
 centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
     const blobName = getBlobName(req.file.originalname);
     addImage(blobName, req.file.buffer, req.file.buffer.length);
@@ -81,13 +94,15 @@ centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
     const {id: id_centro_deportivo} = req.params;
     const {
             nombre,
-            ubicacion
+            ubicacion,
+            esta_habilitado
     } = req.body;
     centroDeportivoModel.updateCentroDeportivo({
             id_centro_deportivo,
             nombre,
             imagen,
-            ubicacion
+            ubicacion,
+            esta_habilitado
     })
     .then((rowCount, more) => {
         res.status(200).json({

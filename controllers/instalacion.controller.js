@@ -3,20 +3,36 @@ const instalacionModel = require('../models/instalacion.model');
 const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
 instalacionRoute.post('/', uploadStrategy, async (req, res) => {
-    const blobName = getBlobName(req.file.originalname);
-    addImage(blobName, req.file.buffer, req.file.buffer.length);
+    // const blobName = getBlobName(req.file.originalname);
+    // addImage(blobName, req.file.buffer, req.file.buffer.length);
+
+    function hasImageFile(){
+        try{
+            const testVar = getBlobName(req.file.originalname);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    var imagen;
+    if (hasImageFile() == true){
+        const blobName = getBlobName(req.file.originalname);
+        imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+        addImage(blobName, req.file.buffer, req.file.buffer.length);
+    }
 
     try {
         const lastIdResult = await instalacionModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_instalacion = lastId + 1;
-        const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+        // const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
         const {
             id_centro_deportivo,
             id_intervalo,
             id_horario,
+            id_deporte,
             nombre,
-            deporte,
             esta_habilitada,
             cantidad_canchas
         } = req.body;
@@ -25,8 +41,8 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
             id_centro_deportivo,
             id_intervalo,
             id_horario,
+            id_deporte,
             nombre,
-            deporte,
             imagen,
             esta_habilitada,
             cantidad_canchas
@@ -93,8 +109,8 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
             id_centro_deportivo,
             id_intervalo,
             id_horario,
+            id_deporte,
             nombre,
-            deporte,
             esta_habilitada,
             cantidad_canchas
     } = req.body;
@@ -103,8 +119,8 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
             id_centro_deportivo,
             id_intervalo,
             id_horario,
+            id_deporte,
             nombre,
-            deporte,
             imagen,
             esta_habilitada,
             cantidad_canchas

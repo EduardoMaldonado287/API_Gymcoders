@@ -87,4 +87,15 @@ alumnoRoute.delete('/:id', async (req, res) => {
     })
 });
 
+alumnoRoute.delete('/:id', async (req, res) => {
+    const {id: matricula} = req.params;
+    alumnoModel.deleteAlumno(matricula)
+    .then((rowCount, more) => {
+        res.status(200).json({ rowCount, more });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    })
+});
+
 module.exports = alumnoRoute;
