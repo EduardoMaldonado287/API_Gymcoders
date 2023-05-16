@@ -53,6 +53,16 @@ centroDeportivoRoute.get('/', async(req, res) => {
     });
 });
 
+centroDeportivoRoute.get('/deportes', async(req, res) => {
+    centroDeportivoModel.getCentroDeportivoAndDeportes()
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
 centroDeportivoRoute.get('/:id', async(req, res) => {
     const {id: id_centro_deportivo} = req.params;
     centroDeportivoModel.getByIDcentroDeportivo(id_centro_deportivo)
@@ -85,6 +95,8 @@ centroDeportivoRoute.get('/:id/deportes', async(req, res) => {
         res.status(500).json({ error });
     });
 });
+
+
 
 centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
     const blobName = getBlobName(req.file.originalname);
