@@ -82,6 +82,22 @@ const getCentroDeportivoAndDeportes = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getInstalacionesJoinDeporteAndCentroDeportivo = (id_centro_deportivo, id_deporte) => {
+    const query = `
+        SELECT i.*
+        FROM Instalacion i
+        INNER JOIN Deporte d ON i.id_deporte = d.id_deporte
+        WHERE i.id_centro_deportivo = @id_centro_deportivo
+        AND d.id_deporte = @id_deporte;
+    `;
+
+    const parameters = [
+        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+        {name: 'id_deporte', type: TYPES.Int, value: id_deporte},
+    ];
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const updateCentroDeportivo = (centroDeportivoData) => {
     const {
         id_centro_deportivo,
@@ -132,6 +148,7 @@ module.exports = {
     getInstalacionesInCentroDeportivo,
     getDeportesInCentroDeportivo,
     getCentroDeportivoAndDeportes,
+    getInstalacionesJoinDeporteAndCentroDeportivo,
     updateCentroDeportivo,
     deleteCentroDeportivo,
     getLastId,
