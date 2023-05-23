@@ -97,7 +97,7 @@ deporteRoute.put('/:id', uploadStrategy, async (req, res) => {
         .catch(error => {
             res.status(500).json({error});
         });
-    });z
+    });
 
 deporteRoute.delete('/:id', async (req, res) => {
     const {id: id_deporte} = req.params;
