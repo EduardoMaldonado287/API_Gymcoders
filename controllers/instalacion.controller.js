@@ -95,9 +95,9 @@ instalacionRoute.get('/:id', async(req, res) => {
     });
 });
 
-instalacionRoute.get('/:id', async(req, res) => {
-    const {id: id_instalacion} = req.params;
-    instalacionModel.getByIDinstalacion(id_instalacion)
+instalacionRoute.get('/:id/horarios_reservados_en_fecha/:fecha', async(req, res) => {
+    const {id: id_instalacion, fecha: fecha} = req.params;
+    instalacionModel.getHorariosReservados(id_instalacion, fecha)
     .then(data => {
         res.status(200).json({ data });
     })

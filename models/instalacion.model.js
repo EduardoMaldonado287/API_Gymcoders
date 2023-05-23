@@ -87,17 +87,19 @@ const getHorariosDisponibles = (id_instalacion, fecha) => {
 
 const getHorariosReservados = (id_instalacion, fecha) => {
     const query = `
-    SELECT r.id_reservacion, r.fecha, r.hora, r.matricula
-    FROM Reservacion r
-    JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-    WHERE r.fecha = '2023-05-22'
-        AND i.id_instalacion = <id_instalacion>
+        SELECT r.hora
+        FROM Reservacion r
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE r.fecha = @fecha
+            AND i.id_instalacion = @id_instalacion
     `;
 
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'fecha', type: TYPES.Date, value: fecha },
     ];
+
+    return execQuery.execReadCommand(query, parameters);
 }
 
 const updateInstalacion = (instalacionData) => {
