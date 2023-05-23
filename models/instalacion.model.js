@@ -143,6 +143,18 @@ const updateInstalacion = (instalacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+const changeState = (id_instalacion) => {
+    const query = `
+        UPDATE instalacion
+        SET esta_habilitada = CASE WHEN esta_habilitada = 0 THEN 1 ELSE 0 END
+        WHERE id_instalacion = @id_instalacion;
+    `;
+    const parameters = [
+        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
 const deleteInstalacion = (id_instalacion) => {
     const query = `
         DELETE FROM [dbo].[instalacion]
@@ -168,6 +180,7 @@ module.exports = {
     getByIDinstalacion,
     getHorariosDisponibles,
     updateInstalacion,
+    changeState,
     deleteInstalacion,
     getLastId,
 };

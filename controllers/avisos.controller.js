@@ -2,7 +2,7 @@ const avisosRoute = require('express').Router();
 const avisosModel = require('../models/avisos.model');
 const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
-avisosRoute.post('/', uploadStrategy, async (req, res) => {
+avisosRoute.post('/num_nomina/:id_nomina', uploadStrategy, async (req, res) => {
     function hasImageFile(){
         try{
             const testVar = getBlobName(req.file.originalname);
@@ -23,8 +23,9 @@ avisosRoute.post('/', uploadStrategy, async (req, res) => {
         const lastIdResult = await avisosModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_aviso = lastId + 1;
+        const {id_nomina: num_nomina} = req.params;
+
         const {
-            num_nomina,
             titulo,
             contenido,
             fecha_publicacion,

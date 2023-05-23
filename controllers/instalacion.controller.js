@@ -2,10 +2,7 @@ const instalacionRoute = require('express').Router();
 const instalacionModel = require('../models/instalacion.model');
 const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
-instalacionRoute.post('/', uploadStrategy, async (req, res) => {
-    // const blobName = getBlobName(req.file.originalname);
-    // addImage(blobName, req.file.buffer, req.file.buffer.length);
-
+instalacionRoute.post('/id_centro/:id', uploadStrategy, async (req, res) => {
     function hasImageFile(){
         try{
             const testVar = getBlobName(req.file.originalname);
@@ -23,12 +20,12 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
     }
 
     try {
+        const {id: id_centro_deportivo} = req.params;
+
         const lastIdResult = await instalacionModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_instalacion = lastId + 1;
-        // const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
         const {
-            id_centro_deportivo,
             id_intervalo,
             id_deporte,
             nombre,
@@ -155,6 +152,25 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
             hora_inicio_fds,
             hora_final_fds
     })
+    .then((rowCount, more) => {
+            res.status(200).json({
+                data: {
+                    rowCount,
+                    more,
+                    id_instalacion
+                },
+            });
+        })
+        .catch(error => {
+            res.status(500).json({error});
+        });
+    });
+
+instalacionRoute.put('/:id/cambiar_estado', async (req, res) => {
+    const {id: id_instalacion} = req.params;
+    centroDeportivoModel.changeState(
+            id_instalacion
+    )
     .then((rowCount, more) => {
             res.status(200).json({
                 data: {
