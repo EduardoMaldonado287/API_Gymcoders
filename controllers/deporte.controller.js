@@ -14,13 +14,11 @@ deporteRoute.post('/',uploadStrategy, async (req, res) => {
 
         const {
             nombre_deporte,
-            esta_habilitado_deporte
         } = req.body;
         await deporteModel.addDeporte({
             id_deporte,
             nombre_deporte,
             imagen_deporte,
-            esta_habilitado_deporte
         })
         .then((rowCount, more) => {
                 res.status(200).json(
@@ -81,13 +79,11 @@ deporteRoute.put('/:id', uploadStrategy, async (req, res) => {
     const {id: id_deporte} = req.params;
     const {
             nombre_deporte,
-            esta_habilitado_deporte
     } = req.body;
     deporteModel.updateDeporte({
             id_deporte,
             nombre_deporte,
             imagen_deporte,
-            esta_habilitado_deporte
     })
     .then((rowCount, more) => {
             res.status(200).json({
@@ -101,26 +97,7 @@ deporteRoute.put('/:id', uploadStrategy, async (req, res) => {
         .catch(error => {
             res.status(500).json({error});
         });
-    });
-
-deporteRoute.put('/:id/cambiar_estado', async (req, res) => {
-    const {id: id_deporte} = req.params;
-    deporteModel.changeState(
-            id_deporte
-    )
-    .then((rowCount, more) => {
-            res.status(200).json({
-                data: {
-                    rowCount,
-                    more,
-                    id_deporte
-                },
-            });
-        })
-        .catch(error => {
-            res.status(500).json({error});
-        });
-    });
+    });z
 
 deporteRoute.delete('/:id', async (req, res) => {
     const {id: id_deporte} = req.params;

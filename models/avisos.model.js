@@ -67,9 +67,9 @@ const updateAvisos = (avisosData) => {
         {name: 'titulo', type: TYPES.VarChar, value: titulo},
         {name: 'contenido', type: TYPES.VarChar, value: contenido},
         {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'fecha_publicacion', type: TYPES.VarChar, value: fecha_publicacion},
-        {name: 'fecha_inicio', type: TYPES.VarChar, value: fecha_inicio},    
-        {name: 'fecha_fin', type: TYPES.VarChar, value: fecha_fin},
+        {name: 'fecha_publicacion', type: TYPES.DateTime, value: fecha_publicacion},
+        {name: 'fecha_inicio', type: TYPES.DateTime, value: fecha_inicio},    
+        {name: 'fecha_fin', type: TYPES.DateTime, value: fecha_fin},
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

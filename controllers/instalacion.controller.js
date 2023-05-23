@@ -24,7 +24,6 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
         const lastId = lastIdResult[0].lastId;
         const id_instalacion = lastId + 1;
         const {
-            id_intervalo,
             id_deporte,
             nombre,
             id_centro_deportivo,
@@ -37,7 +36,6 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
         await instalacionModel.addInstalacion({
             id_instalacion,
             id_centro_deportivo,
-            id_intervalo,
             id_deporte,
             nombre,
             imagen,
@@ -97,6 +95,17 @@ instalacionRoute.get('/:id', async(req, res) => {
     });
 });
 
+instalacionRoute.get('/:id', async(req, res) => {
+    const {id: id_instalacion} = req.params;
+    instalacionModel.getByIDinstalacion(id_instalacion)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
 instalacionRoute.get('/:id/get_horarios_en_fecha/:fecha', async(req, res) => {
     const {id: id_instalacion, fecha: fecha} = req.params;
     instalacionModel.getHorariosDisponibles(id_instalacion, fecha)
@@ -129,7 +138,6 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     const {id: id_instalacion} = req.params;
     const {
             id_centro_deportivo,
-            id_intervalo,
             id_deporte,
             nombre,
             esta_habilitada,
@@ -141,7 +149,6 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     instalacionModel.updateInstalacion({
             id_instalacion,
             id_centro_deportivo,
-            id_intervalo,
             id_deporte,
             nombre,
             imagen,
@@ -196,5 +203,3 @@ instalacionRoute.delete('/:id', async (req, res) => {
     });
 
 module.exports = instalacionRoute;
-
-

@@ -5,7 +5,6 @@ const addInstalacion = (instalacionData) => {
     const {
         id_instalacion,
         id_centro_deportivo,
-        id_intervalo,
         id_horario,
         nombre,
         id_deporte,
@@ -19,13 +18,12 @@ const addInstalacion = (instalacionData) => {
     const query = `
         INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
             id_horario, nombre, id_deporte, imagen, esta_habilitada, hora_inicio_es, hora_inicio_fds, hora_final_fds)
-        VALUES (@id_instalacion, @id_centro_deportivo, @id_intervalo, @id_horario, @nombre, 
+        VALUES (@id_instalacion, @id_centro_deportivo, 1, @id_horario, @nombre, 
             @id_deporte, @imagen, @esta_habilitada, @hora_inicio_es, @hora_final_es, @hora_inicio_fds, @hora_final_fds)
     `;
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
-        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
         { name: 'id_horario', type: TYPES.Int, value: id_horario },
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
@@ -106,8 +104,6 @@ const updateInstalacion = (instalacionData) => {
     const {
         id_instalacion,
         id_centro_deportivo,
-        id_intervalo,
-        id_horario,
         nombre,
         id_deporte,
         imagen,
@@ -146,8 +142,6 @@ const updateInstalacion = (instalacionData) => {
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.VarChar, value: id_centro_deportivo },
-        { name: 'id_intervalo', type: TYPES.VarChar, value: id_intervalo },
-        { name: 'id_horario', type: TYPES.VarChar, value: id_horario },
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
@@ -197,6 +191,7 @@ module.exports = {
     allInstalacion,
     getByIDinstalacion,
     getHorariosDisponibles,
+    getHorariosReservados,
     updateInstalacion,
     changeState,
     deleteInstalacion,
