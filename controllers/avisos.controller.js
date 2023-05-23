@@ -89,7 +89,6 @@ avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
 
     const {id: id_aviso} = req.params;
     const {
-            num_nomina,
             titulo,
             contenido,
             fecha_publicacion,
@@ -98,7 +97,6 @@ avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
     } = req.body;
     avisosModel.updateAvisos({
             id_aviso,
-            num_nomina,
             titulo,
             contenido,
             imagen,

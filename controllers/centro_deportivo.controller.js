@@ -108,36 +108,53 @@ centroDeportivoRoute.get('/:id/deporte/:id2/instalaciones', async(req, res) => {
 });
 
 centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
-    const blobName = getBlobName(req.file.originalname);
-    addImage(blobName, req.file.buffer, req.file.buffer.length);
-    const imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+    function hasImageFile(){
+        try{
+            const testVar = getBlobName(req.file.originalname);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+    
+    try {
+        var imagen;
+        if (hasImageFile() == true){
+            const blobName = getBlobName(req.file.originalname);
+            imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+            addImage(blobName, req.file.buffer, req.file.buffer.length);
+        }
 
-    const {id: id_centro_deportivo} = req.params;
-    const {
-            nombre,
-            ubicacion,
-            esta_habilitado
-    } = req.body;
-    centroDeportivoModel.updateCentroDeportivo({
-            id_centro_deportivo,
-            nombre,
-            imagen,
-            ubicacion,
-            esta_habilitado
-    })
-    .then((rowCount, more) => {
-        res.status(200).json({
-            data: {
-                rowCount,
-                more,
-                id_centro_deportivo
-            },
+        const {id: id_centro_deportivo} = req.params;
+        const {
+                nombre,
+                ubicacion,
+                esta_habilitado
+        } = req.body;
+        centroDeportivoModel.updateCentroDeportivo({
+                id_centro_deportivo,
+                nombre,
+                imagen,
+                ubicacion,
+                esta_habilitado
+        })
+        .then((rowCount, more) => {
+            res.status(200).json({
+                data: {
+                    rowCount,
+                    more,
+                    id_centro_deportivo
+                },
+            });
+        })
+        .catch(error => {
+            res.status(500).json({error});
         });
-    })
-    .catch(error => {
-        res.status(500).json({error});
-    });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
 });
+
 
 centroDeportivoRoute.put('/:id/cambiar_estado', async (req, res) => {
     const {id: id_centro_deportivo} = req.params;

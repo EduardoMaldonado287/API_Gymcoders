@@ -2,7 +2,7 @@ const instalacionRoute = require('express').Router();
 const instalacionModel = require('../models/instalacion.model');
 const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
-instalacionRoute.post('/id_centro/:id', uploadStrategy, async (req, res) => {
+instalacionRoute.post('/', uploadStrategy, async (req, res) => {
     function hasImageFile(){
         try{
             const testVar = getBlobName(req.file.originalname);
@@ -20,8 +20,6 @@ instalacionRoute.post('/id_centro/:id', uploadStrategy, async (req, res) => {
     }
 
     try {
-        const {id: id_centro_deportivo} = req.params;
-
         const lastIdResult = await instalacionModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_instalacion = lastId + 1;
@@ -29,6 +27,7 @@ instalacionRoute.post('/id_centro/:id', uploadStrategy, async (req, res) => {
             id_intervalo,
             id_deporte,
             nombre,
+            id_centro_deportivo,
             esta_habilitada,
             hora_inicio_es,
             hora_final_es,
@@ -168,7 +167,7 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
 
 instalacionRoute.put('/:id/cambiar_estado', async (req, res) => {
     const {id: id_instalacion} = req.params;
-    centroDeportivoModel.changeState(
+    instalacionModel.changeState(
             id_instalacion
     )
     .then((rowCount, more) => {

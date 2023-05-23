@@ -49,6 +49,19 @@ const updateDeporte = (deporteData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+const changeState = (id_deporte) => {
+    const query = `
+        UPDATE deporte
+        SET esta_habilitado_deporte = CASE WHEN esta_habilitado_deporte = 0 THEN 1 ELSE 0 END
+        WHERE id_deporte = @id_deporte;
+    `;
+
+    const parameters = [
+        {name: 'id_deporte', type: TYPES.Int, value: id_deporte},
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
 const deleteDeporte = (id_deporte) => {
     const query = `
         DELETE FROM [dbo].[deporte]
@@ -72,6 +85,7 @@ module.exports = {
     addDeporte,
     allDeporte,
     updateDeporte,
+    changeState,
     deleteDeporte,
     getLastId,
 };

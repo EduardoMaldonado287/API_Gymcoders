@@ -117,14 +117,32 @@ const updateInstalacion = (instalacionData) => {
         hora_inicio_fds,
         hora_final_fds
     } = instalacionData;
-    const query = `
-        UPDATE [dbo].[instalacion]
-        SET id_centro_deportivo = @id_centro_deportivo, id_intervalo = @id_intervalo, id_horario = @id_horario, 
-        nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen, esta_habilitada = @esta_habilitada,
-        hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
-        hora_final_fds = @hora_final_fds
-        WHERE id_instalacion = @id_instalacion
-    `;
+
+    let query = ``;
+    
+    // VERIFICAR LA FUNCIONALIDAD DE ESTA TABLA 
+
+    if (imagen === null){
+        query = `
+            UPDATE [dbo].[instalacion]
+            SET id_centro_deportivo = @id_centro_deportivo, 
+            nombre = @nombre, id_deporte = @id_deporte, esta_habilitada = @esta_habilitada,
+            hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
+            hora_final_fds = @hora_final_fds
+            WHERE id_instalacion = @id_instalacion
+        `;
+    } else {
+        query = `
+            UPDATE [dbo].[instalacion]
+            SET id_centro_deportivo = @id_centro_deportivo,
+            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen, esta_habilitada = @esta_habilitada,
+            hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
+            hora_final_fds = @hora_final_fds
+            WHERE id_instalacion = @id_instalacion
+        `;
+    }
+
+
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.VarChar, value: id_centro_deportivo },

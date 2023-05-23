@@ -39,7 +39,6 @@ const allAvisos = () => {
 const updateAvisos = (avisosData) => {
     const {
         id_aviso,
-        num_nomina,
         titulo,
         contenido,
         imagen,
@@ -47,14 +46,24 @@ const updateAvisos = (avisosData) => {
         fecha_inicio,
         fecha_fin
     } = avisosData;
-    const query = `
-        UPDATE [dbo].[avisos]
-        SET num_nomina = @num_nomina, titulo = @titulo, contenido = @contenido, imagen = @imagen, fecha_publicacion = @fecha_publicacion, fecha_inicio = @fecha_inicio, fecha_fin = @fecha_fin
-        WHERE id_aviso = @id_aviso
-    `;
+
+    let query = ``
+    if (imagen === null){
+        query = `
+            UPDATE [dbo].[avisos]
+            SET titulo = @titulo, contenido = @contenido, fecha_publicacion = @fecha_publicacion, fecha_inicio = @fecha_inicio, fecha_fin = @fecha_fin
+            WHERE id_aviso = @id_aviso
+        `;
+    } else {
+        query = `
+            UPDATE [dbo].[avisos]
+            SET titulo = @titulo, contenido = @contenido, imagen = @imagen, fecha_publicacion = @fecha_publicacion, fecha_inicio = @fecha_inicio, fecha_fin = @fecha_fin
+            WHERE id_aviso = @id_aviso
+        `;
+    }
+
     const parameters = [
         {name: 'id_aviso', type: TYPES.Int, value: id_aviso},
-        {name: 'num_nomina', type: TYPES.VarChar, value: num_nomina},        
         {name: 'titulo', type: TYPES.VarChar, value: titulo},
         {name: 'contenido', type: TYPES.VarChar, value: contenido},
         {name: 'imagen', type: TYPES.VarChar, value: imagen},

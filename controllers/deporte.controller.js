@@ -62,7 +62,6 @@ deporteRoute.get('/:id', async(req, res) => {
     });
 
 deporteRoute.put('/:id', uploadStrategy, async (req, res) => {
-
     function hasImageFile(){
         try{
             const testVar = getBlobName(req.file.originalname);
@@ -90,6 +89,25 @@ deporteRoute.put('/:id', uploadStrategy, async (req, res) => {
             imagen_deporte,
             esta_habilitado_deporte
     })
+    .then((rowCount, more) => {
+            res.status(200).json({
+                data: {
+                    rowCount,
+                    more,
+                    id_deporte
+                },
+            });
+        })
+        .catch(error => {
+            res.status(500).json({error});
+        });
+    });
+
+deporteRoute.put('/:id/cambiar_estado', async (req, res) => {
+    const {id: id_deporte} = req.params;
+    deporteModel.changeState(
+            id_deporte
+    )
     .then((rowCount, more) => {
             res.status(200).json({
                 data: {

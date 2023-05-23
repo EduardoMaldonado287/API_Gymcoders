@@ -9,6 +9,7 @@ const addCentroDeportivo = (centroDeportivoData) => {
         ubicacion,
         esta_habilitado
     } = centroDeportivoData;
+    
     const query = `
         INSERT INTO [dbo].[centro_deportivo] (id_centro_deportivo, nombre, imagen, ubicacion, esta_habilitado)
         VALUES (@id_centro_deportivo, @nombre, @imagen, @ubicacion, @esta_habilitado)
@@ -106,11 +107,22 @@ const updateCentroDeportivo = (centroDeportivoData) => {
         ubicacion,
         esta_habilitado
     } = centroDeportivoData;
-    const query = `
-        UPDATE [dbo].[centro_deportivo]
-        SET nombre = @nombre, imagen = @imagen, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado
-        WHERE id_centro_deportivo = @id_centro_deportivo
-    `;
+
+    let query = ``
+    if (imagen === null){
+        query = `
+            UPDATE [dbo].[centro_deportivo]
+            SET nombre = @nombre, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado
+            WHERE id_centro_deportivo = @id_centro_deportivo
+        `;
+    } else {
+        query = `
+            UPDATE [dbo].[centro_deportivo]
+            SET nombre = @nombre, imagen = @imagen, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado
+            WHERE id_centro_deportivo = @id_centro_deportivo
+        `;  
+    }
+
     const parameters = [
         {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
         {name: 'nombre', type: TYPES.VarChar, value: nombre},
