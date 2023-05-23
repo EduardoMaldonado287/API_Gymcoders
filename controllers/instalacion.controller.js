@@ -30,22 +30,26 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
         const {
             id_centro_deportivo,
             id_intervalo,
-            id_horario,
             id_deporte,
             nombre,
             esta_habilitada,
-            cantidad_canchas
+            hora_inicio_es,
+            hora_final_es,
+            hora_inicio_fds,
+            hora_final_fds
         } = req.body;
         await instalacionModel.addInstalacion({
             id_instalacion,
             id_centro_deportivo,
             id_intervalo,
-            id_horario,
             id_deporte,
             nombre,
             imagen,
             esta_habilitada,
-            cantidad_canchas
+            hora_inicio_es,
+            hora_final_es,
+            hora_inicio_fds,
+            hora_final_fds
         })
         .then((rowCount, more) => {
                 res.status(200).json(
@@ -75,9 +79,31 @@ instalacionRoute.get('/', async(req, res) => {
         });
     });
 
+instalacionRoute.get('/test', async(req, res) => {
+    instalacionModel.getHorariosDisponibles()
+    .then(data => {
+        console.log(data)
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
+
 instalacionRoute.get('/:id', async(req, res) => {
     const {id: id_instalacion} = req.params;
     instalacionModel.getByIDinstalacion(id_instalacion)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
+
+instalacionRoute.get('/:id/get_horarios_en_fecha/:fecha', async(req, res) => {
+    const {id: id_instalacion, fecha: fecha} = req.params;
+    instalacionModel.getHorariosDisponibles(id_instalacion, fecha)
     .then(data => {
         res.status(200).json({ data });
     })
@@ -108,22 +134,26 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     const {
             id_centro_deportivo,
             id_intervalo,
-            id_horario,
             id_deporte,
             nombre,
             esta_habilitada,
-            cantidad_canchas
+            hora_inicio_es,
+            hora_final_es,
+            hora_inicio_fds,
+            hora_final_fds
     } = req.body;
     instalacionModel.updateInstalacion({
             id_instalacion,
             id_centro_deportivo,
             id_intervalo,
-            id_horario,
             id_deporte,
             nombre,
             imagen,
             esta_habilitada,
-            cantidad_canchas
+            hora_inicio_es,
+            hora_final_es,
+            hora_inicio_fds,
+            hora_final_fds
     })
     .then((rowCount, more) => {
             res.status(200).json({
@@ -151,3 +181,5 @@ instalacionRoute.delete('/:id', async (req, res) => {
     });
 
 module.exports = instalacionRoute;
+
+

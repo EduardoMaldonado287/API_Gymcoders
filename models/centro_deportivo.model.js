@@ -122,6 +122,18 @@ const updateCentroDeportivo = (centroDeportivoData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+const changeState = (id_centro_deportivo) => {
+    const query = `
+        UPDATE centro_deportivo
+        SET esta_habilitado = CASE WHEN esta_habilitado = 0 THEN 1 ELSE 0 END
+        WHERE id_centro_deportivo = @id_centro_deportivo;
+    `;
+    const parameters = [
+        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
 const deleteCentroDeportivo = (id_centro_deportivo) => {
     const query = `
         DELETE FROM [dbo].[centro_deportivo]
@@ -150,6 +162,7 @@ module.exports = {
     getCentroDeportivoAndDeportes,
     getInstalacionesJoinDeporteAndCentroDeportivo,
     updateCentroDeportivo,
+    changeState,
     deleteCentroDeportivo,
     getLastId,
 };

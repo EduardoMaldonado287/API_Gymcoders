@@ -7,19 +7,17 @@ reservacionRoute.post('/', async (req, res) => {
         const lastId = lastIdResult[0].lastId;
         const id_reservacion = lastId + 1;
         const {
-            id_instalacion,
             id_estatus,
             matricula,
-            num_cancha,
-            fecha
+            fecha,
+            hora
         } = req.body;
         await reservacionModel.addReservacion({
             id_reservacion,
-            id_instalacion,
             id_estatus,
             matricula,
-            num_cancha,
-            fecha
+            fecha,
+            hora
         })
         .then((rowCount, more) => {
                 res.status(200).json(
@@ -63,19 +61,17 @@ reservacionRoute.get('/:id', async(req, res) => {
 reservacionRoute.put('/:id', async (req, res) => {
     const {id: id_reservacion} = req.params;
     const {
-            id_instalacion,
             id_estatus,
             matricula,
-            num_cancha,
-            fecha
+            fecha,
+            hora
     } = req.body;
     reservacionModel.updateReservacion({
             id_reservacion,
-            id_instalacion,
             id_estatus,
             matricula,
-            num_cancha,
-            fecha
+            fecha,
+            hora
     })
     .then((rowCount, more) => {
             res.status(200).json({
@@ -91,7 +87,6 @@ reservacionRoute.put('/:id', async (req, res) => {
         });
     });
 
-// eliminar al final del proyecto
 reservacionRoute.delete('/:id', async (req, res) => {
     const {id: id_reservacion} = req.params;
     reservacionModel.deleteReservacion(id_reservacion)

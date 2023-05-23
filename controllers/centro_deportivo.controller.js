@@ -139,6 +139,25 @@ centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
     });
 });
 
+centroDeportivoRoute.put('/:id/cambiar_estado', async (req, res) => {
+    const {id: id_centro_deportivo} = req.params;
+    centroDeportivoModel.changeState(
+            id_centro_deportivo
+    )
+    .then((rowCount, more) => {
+            res.status(200).json({
+                data: {
+                    rowCount,
+                    more,
+                    id_centro_deportivo
+                },
+            });
+        })
+        .catch(error => {
+            res.status(500).json({error});
+        });
+    });
+
 centroDeportivoRoute.delete('/:id', async (req, res) => {
     const {id: id_centro_deportivo} = req.params;
     centroDeportivoModel.deleteCentroDeportivo(id_centro_deportivo)
