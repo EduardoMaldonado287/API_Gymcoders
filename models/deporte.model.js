@@ -34,12 +34,12 @@ const updateDeporte = (deporteData) => {
     } = deporteData;
 
     let query = ``
-
     if (imagen_deporte === undefined || imagen_deporte === null)
     {
+        console.log("no esta definido")
         query = `
             UPDATE [dbo].[deporte]
-            SET nombre_deporte = @nombre_deporte, 
+            SET nombre_deporte = @nombre_deporte
             WHERE id_deporte = @id_deporte
         `;
     } else {
