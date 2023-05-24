@@ -109,7 +109,7 @@ const updateCentroDeportivo = (centroDeportivoData) => {
     } = centroDeportivoData;
 
     let query = ``
-    if (imagen === null){
+    if (imagen === null || imagen === undefined){
         query = `
             UPDATE [dbo].[centro_deportivo]
             SET nombre = @nombre, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado

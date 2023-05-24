@@ -44,25 +44,19 @@ const getByIDreservacion = (id_reservacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
-const updateReservacion = (reservacionData) => {
+const cambiarEstadoReservacion = (reservacionData) => {
     const {
         id_reservacion,
-        id_estatus,
-        matricula,
-        fecha,
-        hora
+        nuevo_estatus,
     } = reservacionData;
     const query = `
         UPDATE [dbo].[reservacion]
-        SET id_estatus = @id_estatus, matricula = @matricula, fecha = @fecha, hora = @hora
+        SET id_estatus = @id_estatus
         WHERE id_reservacion = @id_reservacion
     `;
     const parameters = [
         {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
-        {name: 'id_estatus', type: TYPES.Int, value: id_estatus},
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'fecha', type: TYPES.Date, value: fecha},
-        {name: 'hora', type: TYPES.Time, value: hora},
+        {name: 'nuevo_estatus', type: TYPES.Int, value: nuevo_estatus},
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -90,7 +84,7 @@ module.exports = {
     addReservacion,
     allReservacion,
     getByIDreservacion,
-    updateReservacion,
+    cambiarEstadoReservacion,
     deleteReservacion,
     getLastId,
 };

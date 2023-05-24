@@ -56,20 +56,12 @@ reservacionRoute.get('/:id', async(req, res) => {
     });
 });
 
-reservacionRoute.put('/:id', async (req, res) => {
-    const {id: id_reservacion} = req.params;
-    const {
-            id_estatus,
-            matricula,
-            fecha,
-            hora
-    } = req.body;
-    reservacionModel.updateReservacion({
+reservacionRoute.put('/:id/cambiar_estado/:nuevo_estatus', async (req, res) => {
+    const {id: id_reservacion, nuevo_estatus: nuevo_estatus} = req.params;
+
+    reservacionModel.cambiarEstadoReservacion({
             id_reservacion,
-            id_estatus,
-            matricula,
-            fecha,
-            hora
+            nuevo_estatus
     })
     .then((rowCount, more) => {
             res.status(200).json({

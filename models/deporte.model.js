@@ -32,11 +32,24 @@ const updateDeporte = (deporteData) => {
         nombre_deporte,
         imagen_deporte,
     } = deporteData;
-    const query = `
-        UPDATE [dbo].[deporte]
-        SET nombre_deporte = @nombre_deporte, imagen_deporte = @imagen_deporte
-        WHERE id_deporte = @id_deporte
-    `;
+
+    let query = ``
+
+    if (imagen_deporte === undefined || imagen_deporte === null)
+    {
+        query = `
+            UPDATE [dbo].[deporte]
+            SET nombre_deporte = @nombre_deporte, 
+            WHERE id_deporte = @id_deporte
+        `;
+    } else {
+        query = `
+            UPDATE [dbo].[deporte]
+            SET nombre_deporte = @nombre_deporte, imagen_deporte = @imagen_deporte
+            WHERE id_deporte = @id_deporte
+        `;
+    }
+
     const parameters = [
         {name: 'id_deporte', type: TYPES.Int, value: id_deporte},
         {name: 'nombre_deporte', type: TYPES.VarChar, value: nombre_deporte},
