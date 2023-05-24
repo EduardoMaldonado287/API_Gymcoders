@@ -51,7 +51,7 @@ const cambiarEstadoReservacion = (reservacionData) => {
     } = reservacionData;
     const query = `
         UPDATE [dbo].[reservacion]
-        SET id_estatus = @id_estatus
+        SET id_estatus = @nuevo_estatus
         WHERE id_reservacion = @id_reservacion
     `;
     const parameters = [

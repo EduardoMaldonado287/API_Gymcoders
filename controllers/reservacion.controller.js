@@ -56,7 +56,7 @@ reservacionRoute.get('/:id', async(req, res) => {
     });
 });
 
-reservacionRoute.put('/:id/cambiar_estado/:nuevo_estatus', async (req, res) => {
+reservacionRoute.put('/:id/cambiar_estatus/:nuevo_estatus', async (req, res) => {
     const {id: id_reservacion, nuevo_estatus: nuevo_estatus} = req.params;
 
     reservacionModel.cambiarEstadoReservacion({
