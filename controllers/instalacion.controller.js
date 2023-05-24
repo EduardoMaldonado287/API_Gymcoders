@@ -12,24 +12,24 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
         }
     }
 
-    var imagen;
-    if (hasImageFile() == true){
-        const blobName = getBlobName(req.file.originalname);
-        imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
-        addImage(blobName, req.file.buffer, req.file.buffer.length);
-    }
-
     try {
+        var imagen;
+        if (hasImageFile() == true){
+            const blobName = getBlobName(req.file.originalname);
+            imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+            addImage(blobName, req.file.buffer, req.file.buffer.length);
+        }
+
         const lastIdResult = await instalacionModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_instalacion = lastId + 1;
         const {
+            id_centro_deportivo,
             id_deporte,
             nombre,
-            id_centro_deportivo,
-            hora_inicio_es,
+            hora_inicial_es,
             hora_final_es,
-            hora_inicio_fds,
+            hora_inicial_fds,
             hora_final_fds
         } = req.body;
         await instalacionModel.addInstalacion({
@@ -38,9 +38,9 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
             id_deporte,
             nombre,
             imagen,
-            hora_inicio_es,
+            hora_inicial_es,
             hora_final_es,
-            hora_inicio_fds,
+            hora_inicial_fds,
             hora_final_fds
         })
         .then((rowCount, more) => {
@@ -57,7 +57,7 @@ instalacionRoute.post('/', uploadStrategy, async (req, res) => {
                 res.status(500).json({error});
             });
         } catch (error) {
-            res.status(500).json({ error });
+            res.status(555).json({ error });
         }
     });
 
@@ -138,10 +138,9 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
             id_centro_deportivo,
             id_deporte,
             nombre,
-            esta_habilitada,
-            hora_inicio_es,
+            hora_inicial_es,
             hora_final_es,
-            hora_inicio_fds,
+            hora_inicial_fds,
             hora_final_fds
     } = req.body;
     instalacionModel.updateInstalacion({
@@ -150,10 +149,9 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
             id_deporte,
             nombre,
             imagen,
-            esta_habilitada,
-            hora_inicio_es,
+            hora_inicial_es,
             hora_final_es,
-            hora_inicio_fds,
+            hora_inicial_fds,
             hora_final_fds
     })
     .then((rowCount, more) => {

@@ -8,16 +8,23 @@ const addInstalacion = (instalacionData) => {
         nombre,
         id_deporte,
         imagen,
-        hora_inicio_es,
+        hora_inicial_es,
         hora_final_es,
-        hora_inicio_fds,
+        hora_inicial_fds,
         hora_final_fds
     } = instalacionData;
+   
+    for (const prop in instalacionData) {
+        if (instalacionData.hasOwnProperty(prop)) {
+            console.log(prop + ':', instalacionData[prop]);
+        }
+    }
     const query = `
-        INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
-            nombre, id_deporte, imagen, hora_inicio_es, hora_inicio_fds, hora_final_fds, esta_habilitada)
-        VALUES (@id_instalacion, @id_centro_deportivo, 1, @nombre, 
-            @id_deporte, @imagen, @hora_inicio_es, @hora_final_es, @hora_inicio_fds, @hora_final_fds, 1)
+
+    INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
+        nombre, id_deporte, imagen, hora_inicial_es, hora_final_es, hora_inicial_fds, hora_final_fds, esta_habilitada)
+    VALUES (@id_instalacion, @id_centro_deportivo, 1, @nombre, 
+        @id_deporte, @imagen, @hora_inicial_es, @hora_final_es, @hora_inicial_fds, @hora_final_fds, 1)
     `;
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
@@ -25,9 +32,9 @@ const addInstalacion = (instalacionData) => {
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
-        { name: 'hora_inicio_es', type: TYPES.VarChar, value: hora_inicio_es },
+        { name: 'hora_inicial_es', type: TYPES.Varchar, value: hora_inicial_es },
         { name: 'hora_final_es', type: TYPES.VarChar, value: hora_final_es },
-        { name: 'hora_inicio_fds', type: TYPES.VarChar, value: hora_inicio_fds },
+        { name: 'hora_inicial_fds', type: TYPES.VarChar, value: hora_inicial_fds },
         { name: 'hora_final_fds', type: TYPES.VarChar, value: hora_final_fds },
     ];
     return execQuery.execWriteCommand(query, parameters);
@@ -105,10 +112,9 @@ const updateInstalacion = (instalacionData) => {
         nombre,
         id_deporte,
         imagen,
-        esta_habilitada,
-        hora_inicio_es,
+        hora_inicial_es,
         hora_final_es,
-        hora_inicio_fds,
+        hora_inicial_fds,
         hora_final_fds
     } = instalacionData;
 
@@ -120,7 +126,7 @@ const updateInstalacion = (instalacionData) => {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo, 
-            nombre = @nombre, id_deporte = @id_deporte, esta_habilitada = @esta_habilitada,
+            nombre = @nombre, id_deporte = @id_deporte,
             hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
             hora_final_fds = @hora_final_fds
             WHERE id_instalacion = @id_instalacion
@@ -129,7 +135,7 @@ const updateInstalacion = (instalacionData) => {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo,
-            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen, esta_habilitada = @esta_habilitada,
+            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen,
             hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
             hora_final_fds = @hora_final_fds
             WHERE id_instalacion = @id_instalacion
@@ -143,10 +149,9 @@ const updateInstalacion = (instalacionData) => {
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
-        { name: 'esta_habilitada', type: TYPES.VarChar, value: esta_habilitada },
-        { name: 'hora_inicio_es', type: TYPES.VarChar, value: hora_inicio_es },
+        { name: 'hora_inicial_es', type: TYPES.VarChar, value: hora_inicial_es },
         { name: 'hora_final_es', type: TYPES.VarChar, value: hora_final_es },
-        { name: 'hora_inicio_fds', type: TYPES.VarChar, value: hora_inicio_fds },
+        { name: 'hora_inicial_fds', type: TYPES.VarChar, value: hora_inicial_fds },
         { name: 'hora_final_fds', type: TYPES.VarChar, value: hora_final_fds },
 
     ];
@@ -195,4 +200,30 @@ module.exports = {
     deleteInstalacion,
     getLastId,
 };
+
+// // Parte del archivo instalacion.controller
+
+// const lastIdResult = await instalacionModel.getLastId();
+// const lastId = lastIdResult[0].lastId;
+// const id_instalacion = lastId + 1;
+// const {
+//     id_centro_deportivo,
+//     id_deporte,
+//     nombre,
+//     hora_inicial_es,
+//     hora_final_es,
+//     hora_inicial_fds,
+//     hora_final_fds
+// } = req.body;
+// await instalacionModel.addInstalacion({
+//     id_instalacion,
+//     id_centro_deportivo,
+//     id_deporte,
+//     nombre,
+//     imagen,
+//     hora_inicial_es,
+//     hora_final_es,
+//     hora_inicial_fds,
+//     hora_final_fds
+// })
 
