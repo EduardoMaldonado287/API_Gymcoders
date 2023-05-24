@@ -4,21 +4,22 @@ const TYPES = require('tedious').TYPES;
 const addReservacion = (reservacionData) => {
     const {
         id_reservacion,
-        id_estatus,
+        id_instalacion,
         matricula,
         fecha,
         hora
     } = reservacionData;
     const query = `
-        INSERT INTO [dbo].[reservacion] (id_reservacion, id_estatus, matricula, fecha, hora)
-        VALUES (@id_reservacion, @id_estatus, @matricula, @fecha, @hora)
+        INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora)
+        VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora)
     `;
     const parameters = [
         {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
+        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
         {name: 'id_estatus', type: TYPES.Int, value: id_estatus},
         {name: 'matricula', type: TYPES.VarChar, value: matricula},
         {name: 'fecha', type: TYPES.Date, value: fecha},
-        {name: 'hora', type: TYPES.Time, value: hora},
+        {name: 'hora', type: TYPES.VarChar, value: hora},
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

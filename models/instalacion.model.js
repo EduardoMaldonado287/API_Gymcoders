@@ -62,27 +62,23 @@ const getByIDinstalacion = (id_instalacion) => {
 
 const getHorariosDisponibles = (id_instalacion, fecha) => {
     const query = `
-    SELECT lh.hora
-    FROM Lista_horas lh
-    LEFT JOIN (
-        SELECT r.hora
-        FROM Reservacion r
-        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-        WHERE r.fecha = '2023-05-25'
-          AND i.id_instalacion = 1
-    ) AS reservas ON lh.hora = reservas.hora
-    WHERE lh.hora >= '08:00:00'
-      AND lh.hora <= '08:00:00'
-      AND reservas.hora IS NULL;
+        SELECT lh.hora
+        FROM Lista_horas lh
+        LEFT JOIN (
+            SELECT r.hora
+            FROM Reservacion r
+            JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+            WHERE r.fecha = '2023-05-25'
+            AND i.id_instalacion = 1
+        ) AS reservas ON lh.hora = reservas.hora
+        WHERE lh.hora >= '08:00:00'
+        AND lh.hora <= '20:00:00'
+        AND reservas.hora IS NULL;
     `;
 
-    const horaInicial = '08:00:00';
-    const horaFinal = '20:00:00';
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'fecha', type: TYPES.Date, value: fecha },
-        // { name: 'horaInicial', type: TYPES.Time, value: horaInicial},
-        // { name: 'horaFinal', type: TYPES.Time, value: horaFinal},
     ];
 
     return execQuery.execReadCommand(query, parameters);
@@ -105,6 +101,22 @@ const getHorariosReservados = (id_instalacion, fecha) => {
     return execQuery.execReadCommand(query, parameters);
 }
 
+const getCalificaciones = (id_instalacion) => {
+    const query = `
+        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = @id_instalacion;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+}
+
 const updateInstalacion = (instalacionData) => {
     const {
         id_instalacion,
@@ -120,9 +132,8 @@ const updateInstalacion = (instalacionData) => {
 
     let query = ``;
     
-    // VERIFICAR LA FUNCIONALIDAD DE ESTA TABLA 
-
-    if (imagen === null){
+    // VERIFICAR LA FUNCIONALIDAD DE ESTA TABLA / update funciona
+    if (imagen === null || imagen === undefined){
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo, 
@@ -189,12 +200,15 @@ const getLastId = () => {
     return execQuery.execReadCommand(query);
 };
 
+
+
 module.exports = {
     addInstalacion,
     allInstalacion,
     getByIDinstalacion,
     getHorariosDisponibles,
     getHorariosReservados,
+    getCalificaciones,
     updateInstalacion,
     changeState,
     deleteInstalacion,

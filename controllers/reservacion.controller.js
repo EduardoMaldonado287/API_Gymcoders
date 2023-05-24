@@ -1,20 +1,18 @@
 const reservacionRoute = require('express').Router();
 const reservacionModel = require('../models/reservacion.model');
 
-reservacionRoute.post('/', async (req, res) => {
+reservacionRoute.post('/matricula/:id', async (req, res) => {
     try {
         const lastIdResult = await reservacionModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_reservacion = lastId + 1;
+        const {id: matricula } = req.params
         const {
-            id_estatus,
-            matricula,
             fecha,
             hora
         } = req.body;
         await reservacionModel.addReservacion({
             id_reservacion,
-            id_estatus,
             matricula,
             fecha,
             hora

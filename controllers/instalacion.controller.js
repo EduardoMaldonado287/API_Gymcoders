@@ -71,8 +71,9 @@ instalacionRoute.get('/', async(req, res) => {
         });
     });
 
-instalacionRoute.get('/test', async(req, res) => {
-    instalacionModel.getHorariosDisponibles()
+instalacionRoute.get('/:id/calificaciones', async(req, res) => {
+    const {id: id_instalacion} = req.params
+    instalacionModel.getCalificaciones(id_instalacion)
     .then(data => {
         console.log(data)
             res.status(200).json({ data });

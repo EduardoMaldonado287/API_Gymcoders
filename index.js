@@ -12,7 +12,6 @@ const administradorController = require('./controllers/administrador.controller.
 const avisosController = require('./controllers/avisos.controller.js');
 
 const intervaloTiempoController = require('./controllers/intervalo_tiempo.controller.js');
-const reservacionInstalacionController = require('./controllers/reservacion_instalacion.controller.js');
 const instalacionController = require('./controllers/instalacion.controller.js');
 const participantesController = require('./controllers/participantes.controller.js');
 
@@ -61,7 +60,6 @@ app.use('/administrador', administradorController);
 app.use('/avisos', avisosController);
 
 app.use('/intervalo_tiempo', intervaloTiempoController);
-app.use('/reservacion_instalacion', reservacionInstalacionController);
 app.use('/instalacion', instalacionController);
 app.use('/participantes', participantesController);
 
