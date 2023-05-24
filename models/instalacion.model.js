@@ -15,9 +15,9 @@ const addInstalacion = (instalacionData) => {
     } = instalacionData;
     const query = `
         INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
-            nombre, id_deporte, imagen, hora_inicio_es, hora_inicio_fds, hora_final_fds)
+            nombre, id_deporte, imagen, hora_inicio_es, hora_inicio_fds, hora_final_fds, esta_habilitada)
         VALUES (@id_instalacion, @id_centro_deportivo, 1, @nombre, 
-            @id_deporte, @imagen, @hora_inicio_es, @hora_final_es, @hora_inicio_fds, @hora_final_fds)
+            @id_deporte, @imagen, @hora_inicio_es, @hora_final_es, @hora_inicio_fds, @hora_final_fds, 1)
     `;
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
