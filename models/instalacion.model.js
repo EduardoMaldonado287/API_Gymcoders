@@ -32,7 +32,7 @@ const addInstalacion = (instalacionData) => {
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
-        { name: 'hora_inicial_es', type: TYPES.Varchar, value: hora_inicial_es },
+        { name: 'hora_inicial_es', type: TYPES.VarChar, value: hora_inicial_es },
         { name: 'hora_final_es', type: TYPES.VarChar, value: hora_final_es },
         { name: 'hora_inicial_fds', type: TYPES.VarChar, value: hora_inicial_fds },
         { name: 'hora_final_fds', type: TYPES.VarChar, value: hora_final_fds },
