@@ -47,14 +47,33 @@ const updateDeporte = (deporteData) => {
 
 const deleteDeporte = (id_deporte) => {
     const query = `
-        DELETE FROM [dbo].[deporte]
-        WHERE id_deporte= @id_deporte
+        DELETE FROM Deporte
+        WHERE id_deporte = @id_deporte
+        AND id_deporte NOT IN (
+            SELECT id_deporte
+            FROM Instalacion
+        );
+
     `;
     const parameters = [
         {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
+
+const tieneInstalaciones = (id_deporte) => {
+    const query = `
+        SELECT CASE WHEN EXISTS (
+            SELECT 1
+            FROM Instalacion
+            WHERE id_deporte = @id_deporte
+        ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS tiene_instalaciones
+    `;
+    const parameters = [
+        {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
+    ];
+    return execQuery.execReadCommand(query, parameters);
+}
 
 const getLastId = () => {
     const query = `
@@ -69,5 +88,6 @@ module.exports = {
     allDeporte,
     updateDeporte,
     deleteDeporte,
+    tieneInstalaciones,
     getLastId,
 };

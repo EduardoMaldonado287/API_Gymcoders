@@ -18,9 +18,8 @@ const addInstalacion = (instalacionData) => {
         if (instalacionData.hasOwnProperty(prop)) {
             console.log(prop + ':', instalacionData[prop]);
         }
-    }
+    } 
     const query = `
-
     INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
         nombre, id_deporte, imagen, hora_inicial_es, hora_final_es, hora_inicial_fds, hora_final_fds, esta_habilitada)
     VALUES (@id_instalacion, @id_centro_deportivo, 1, @nombre, 
@@ -183,8 +182,16 @@ const changeState = (id_instalacion) => {
 
 const deleteInstalacion = (id_instalacion) => {
     const query = `
-        DELETE FROM [dbo].[instalacion]
-        WHERE id_instalacion= @id_instalacion
+        DELETE FROM Reservacion
+        WHERE id_instalacion = @id_instalacion;
+        
+        -- Eliminar registros de calificaciones relacionadas
+        DELETE FROM Calificacion_Instalacion
+        WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion = @id_instalacion);
+        
+        -- Eliminar el registro de instalación
+        DELETE FROM Instalacion
+        WHERE id_instalacion = @id_instalacion;
     `;
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion }
@@ -215,29 +222,4 @@ module.exports = {
     getLastId,
 };
 
-// // Parte del archivo instalacion.controller
-
-// const lastIdResult = await instalacionModel.getLastId();
-// const lastId = lastIdResult[0].lastId;
-// const id_instalacion = lastId + 1;
-// const {
-//     id_centro_deportivo,
-//     id_deporte,
-//     nombre,
-//     hora_inicial_es,
-//     hora_final_es,
-//     hora_inicial_fds,
-//     hora_final_fds
-// } = req.body;
-// await instalacionModel.addInstalacion({
-//     id_instalacion,
-//     id_centro_deportivo,
-//     id_deporte,
-//     nombre,
-//     imagen,
-//     hora_inicial_es,
-//     hora_final_es,
-//     hora_inicial_fds,
-//     hora_final_fds
-// })
 

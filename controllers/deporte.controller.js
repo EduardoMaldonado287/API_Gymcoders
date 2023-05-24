@@ -48,9 +48,9 @@ deporteRoute.get('/', async(req, res) => {
         });
     });
 
-deporteRoute.get('/:id', async(req, res) => {
+deporteRoute.get('/:id/tiene_instalaciones?', async(req, res) => {
     const  {id: id_deporte} = req.params;
-    deporteModel.getByIDdeporte(id_deporte)
+    deporteModel.tieneInstalaciones(id_deporte)
     .then(data => {
             res.status(200).json({ data });
         })
