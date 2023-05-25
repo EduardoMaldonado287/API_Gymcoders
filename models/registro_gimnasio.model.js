@@ -24,49 +24,41 @@ const allRegistroGimnasio = () => {
     return execQuery.execReadCommand(query);
 };
 
-// const updateRegistroGimnasio = (registroGimnasioData) => {
-//     const {
-//         id_registro,
-//         fecha,
-//         matricula
-//     } = registroGimnasioData;
-//     const query = `
-//         UPDATE [dbo].[registro_gimnasio]
-//         SET fecha = @fecha, matricula = @matricula
-//         WHERE id_registro = @id_registro
-//     `;
-//     const parameters = [
-//         {name: 'id_registro', type: TYPES.Int, value: id_registro},
-//         {name: 'fecha', type: TYPES.VarChar, value: fecha},
-//         {name: 'matricula', type: TYPES.VarChar, value: matricula},
-//     ];
-//     return execQuery.execWriteCommand(query, parameters);
-// };
-
-// Eliminar al final del proyecto 
-const deleteRegistroGimnasio = (id_registro) => {
+const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) => {
     const query = `
-        DELETE FROM [dbo].[registro_gimnasio]
-        WHERE id_registro= @id_registro
+        SELECT CAST(fecha AS DATE) AS fecha, COUNT(*) AS cantidad_registros
+        FROM Registro_Gimnasio
+        WHERE fecha >= @fecha_inicial AND fecha <= @fecha_final
+        GROUP BY CAST(fecha AS DATE)
+        ORDER BY CAST(fecha AS DATE);
     `;
+
     const parameters = [
-        {name: 'id_registro', type: TYPES.Int, value: id_registro}
+        {name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial},
+        {name: 'fecha_final', type: TYPES.DateTime, value: fecha_final},
     ];
-    return execQuery.execWriteCommand(query, parameters);
-};
+    return execQuery.execReadCommand(query, parameters);
+}
 
-const getLastId = () => {
+const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
     const query = `
-        SELECT MAX(id_registro) AS lastId
-        FROM [dbo].[registro_gimnasio]
+        SELECT TOP 10 matricula, COUNT(*) AS cantidad_repeticiones
+        FROM Registro_Gimnasio
+        WHERE fecha >= @fecha_inicial AND fecha <= @fecha_final
+        GROUP BY matricula
+        ORDER BY cantidad_repeticiones DESC;
     `;
-    return execQuery.execReadCommand(query);
-};
+
+    const parameters = [
+        {name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial},
+        {name: 'fecha_final', type: TYPES.DateTime, value: fecha_final},
+    ];
+    return execQuery.execReadCommand(query, parameters);
+}
 
 module.exports = {
     addRegistroGimnasio,
     allRegistroGimnasio,
-    // updateRegistroGimnasio,
-    // deleteRegistroGimnasio,
-    getLastId,
+    allRegistroConIntervaloFechasEstadisticas,
+    topAlumnosAsistencia
 };

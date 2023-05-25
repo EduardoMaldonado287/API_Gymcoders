@@ -20,7 +20,9 @@ const calificacionInstalacionController = require('./controllers/calificacion_in
 const registroGimnasioController = require('./controllers/registro_gimnasio.controller.js');
 const gimnasioController = require('./controllers/gimnasio.controller.js');
 
-const deporteController = require('./controllers/deporte.controller.js')
+const deporteController = require('./controllers/deporte.controller.js');
+const testController = require('./queryTest.js');
+
 
 dotenv.config();
 
@@ -69,6 +71,8 @@ app.use('/registro_gimnasio', registroGimnasioController);
 app.use('/gimnasio', gimnasioController);
 
 app.use('/deporte', deporteController);
+
+app.use('/test', testController);
 
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
