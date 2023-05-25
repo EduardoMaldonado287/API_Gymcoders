@@ -59,6 +59,28 @@ const getByIDinstalacion = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+const getInstalacionWithCentroDeportivo = (id_instalacion) => {
+    const query = `
+    SELECT
+        i.nombre AS nombre_instalacion,
+        i.id_instalacion,
+        i.imagen,
+        i.id_centro_deportivo,
+        c.nombre AS nombre_centro_deportivo
+    FROM
+        Instalacion i
+        INNER JOIN Centro_Deportivo c ON i.id_centro_deportivo = c.id_centro_deportivo
+    WHERE
+        i.id_instalacion = 1;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const getHorariosDisponibles = (id_instalacion, fecha) => {
     const query = `
         SELECT lh.hora
@@ -216,6 +238,7 @@ module.exports = {
     getHorariosDisponibles,
     getHorariosReservados,
     getCalificaciones,
+    getInstalacionWithCentroDeportivo,
     updateInstalacion,
     changeState,
     deleteInstalacion,

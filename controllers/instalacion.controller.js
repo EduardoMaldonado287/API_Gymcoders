@@ -71,6 +71,17 @@ instalacionRoute.get('/', async(req, res) => {
         });
     });
 
+instalacionRoute.get('/:id/con_centro_deportivo', async(req, res) => {
+    const {id: id_instalacion} = req.params
+    instalacionModel.getInstalacionWithCentroDeportivo(id_instalacion)
+    .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
+
 instalacionRoute.get('/:id/calificaciones', async(req, res) => {
     const {id: id_instalacion} = req.params
     instalacionModel.getCalificaciones(id_instalacion)
