@@ -148,21 +148,26 @@ const changeState = (id_centro_deportivo) => {
 
 const deleteCentroDeportivo = (id_centro_deportivo) => {
     const query = `
-        -- Eliminar registros de reservaciones relacionadas
-        DELETE FROM Reservacion
-        WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo);
-        
-        -- Eliminar registros de calificaciones relacionadas
-        DELETE FROM Calificacion_Instalacion
-        WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));
-        
-        -- Eliminar los registros de instalaciones relacionadas
-        DELETE FROM Instalacion
-        WHERE id_centro_deportivo = @id_centro_deportivo;
-        
-        -- Eliminar el registro del centro deportivo
-        DELETE FROM Centro_Deportivo
-        WHERE id_centro_deportivo = @id_centro_deportivo;
+    -- Eliminar los participantes de las reservaciones relacionadas
+    DELETE FROM Participantes
+    WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));
+    
+    -- Eliminar las calificaciones de las reservaciones relacionadas
+    DELETE FROM Calificacion_Instalacion
+    WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));
+    
+    -- Eliminar las reservaciones relacionadas
+    DELETE FROM Reservacion
+    WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo);
+    
+    -- Eliminar las instalaciones del centro deportivo
+    DELETE FROM Instalacion
+    WHERE id_centro_deportivo = @id_centro_deportivo;
+    
+    -- Eliminar el centro deportivo
+    DELETE FROM Centro_Deportivo
+    WHERE id_centro_deportivo = @id_centro_deportivo;
+
     `;
     const parameters = [
         {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo}
