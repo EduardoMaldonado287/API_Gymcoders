@@ -204,6 +204,10 @@ const changeState = (id_instalacion) => {
 
 const deleteInstalacion = (id_instalacion) => {
     const query = `
+        DELETE FROM Participantes
+        WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion = @id_instalacion);
+        
+        -- Eliminar registros de reservaciones relacionadas
         DELETE FROM Reservacion
         WHERE id_instalacion = @id_instalacion;
         
