@@ -71,7 +71,7 @@ const getInstalacionWithCentroDeportivo = (id_instalacion) => {
         Instalacion i
         INNER JOIN Centro_Deportivo c ON i.id_centro_deportivo = c.id_centro_deportivo
     WHERE
-        i.id_instalacion = 1;
+        i.id_instalacion = @id_instalacion;
     `;
 
     const parameters = [
