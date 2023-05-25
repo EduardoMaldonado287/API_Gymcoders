@@ -25,6 +25,13 @@ const allAlumno = () => {
     `;
     return execQuery.execReadCommand(query);
 }; 
+// Buscamos al alumno especifico
+const  findAlumno= async (matricula) =>{
+    const query = `
+    SELECT * FROM [dbo].[ALUMNO] WHERE matricula = ${matricula}
+    `
+    return execQuery.execWriteCommand(query);
+}
 
 const getReservaciones = (matricula) => {
     const query = `
@@ -73,4 +80,5 @@ module.exports = {
     getReservaciones,
     updateAlumno,
     deleteAlumno,
+    findAlumno
 };

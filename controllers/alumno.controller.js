@@ -1,6 +1,6 @@
 const alumnoRoute = require('express').Router();
 const alumnoModel = require('../models/alumno.model');
-
+const {verifyJWT,signJWT} = require('../services/alumno.services')
 const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
 alumnoRoute.post('/', async (req, res) => {
@@ -27,7 +27,21 @@ alumnoRoute.post('/', async (req, res) => {
         res.status(500).json({error});
     });
 });
-
+// Hacer Login
+alumnoRoute.post("/login",async(req,res)=>{
+    // PREGUNTARLE A EDUARDO COMO LLAMA A UN ALUMNO
+    const {matricula,password} = req.body
+    const alumno = await alumnoModel.findAlumno(matricula)
+    if (matricula != alumno.matricula || password != alumno.password){
+        res.status(401).send("usuario no identificado")
+    }
+    const accessTkn = signJWT({matricula:matricula,password:password},"2h");
+    res.cookie('accestoken',accessTkn,{
+        maxAge:3000,
+        httpOnly:true,
+    })
+    res.send(verifyJWT(accessTkn))
+})
 
 alumnoRoute.get('/', async(req, res) => {
     alumnoModel.allAlumno()
