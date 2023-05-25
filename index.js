@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const getConnection = require('./helpers/database.js');
 const bodyParser = require('body-parser');
 const path = require('path')
-
+// juan
 const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
 const alumnoController = require('./controllers/alumno.controller.js');
 const administradorController = require('./controllers/administrador.controller.js');
@@ -25,6 +25,7 @@ const testController = require('./queryTest.js');
 
 
 dotenv.config();
+
 
 const {
     API_PORT,
