@@ -138,11 +138,14 @@ instalacionRoute.get('/:id_instalacion/get_horarios_disponibles/fecha/:fecha', a
     try {
         await sql.connect(configConnection);
         const request = new sql.Request();
+
         const id_instalacion = req.params.id_instalacion;
-        const fecha = req.params.fecha;
-        
+        // const fecha = req.params.fecha;
+
+        const fecha = new Date(req.params.fecha);
+        const formattedFecha = fecha.toISOString().split('T')[0];   
         const query = `
-        EXEC ObtenerHorariosDisponibles @id_instalacion = ${id_instalacion}, @fecha = '${fecha}';
+        EXEC ObtenerHorariosDisponibles @id_instalacion = ${id_instalacion}, @fecha = '${formattedFecha}';
         `
         ;
     
