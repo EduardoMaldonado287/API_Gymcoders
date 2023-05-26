@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const getConnection = require('./helpers/database.js');
+const { getConnection } = require('./helpers/database.js');
 const bodyParser = require('body-parser');
 const path = require('path')
 

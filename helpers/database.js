@@ -46,4 +46,6 @@ const getConnection = () => {
     return {connect};
 };
 
-module.exports = getConnection;
+module.exports = { getConnection, configConnection };
+
+// module.exports = configConnection;

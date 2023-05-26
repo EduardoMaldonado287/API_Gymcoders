@@ -8,26 +8,23 @@ const addInstalacion = (instalacionData) => {
         nombre,
         id_deporte,
         imagen,
+        id_intervalo,
         hora_inicial_es,
         hora_final_es,
         hora_inicial_fds,
         hora_final_fds
     } = instalacionData;
    
-    for (const prop in instalacionData) {
-        if (instalacionData.hasOwnProperty(prop)) {
-            console.log(prop + ':', instalacionData[prop]);
-        }
-    } 
     const query = `
     INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
         nombre, id_deporte, imagen, hora_inicial_es, hora_final_es, hora_inicial_fds, hora_final_fds, esta_habilitada)
-    VALUES (@id_instalacion, @id_centro_deportivo, 1, @nombre, 
+    VALUES (@id_instalacion, @id_centro_deportivo, @id_intervalo, @nombre, 
         @id_deporte, @imagen, @hora_inicial_es, @hora_final_es, @hora_inicial_fds, @hora_final_fds, 1)
     `;
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
@@ -124,11 +121,29 @@ const getHorariosReservados = (id_instalacion, fecha) => {
 
 const getCalificaciones = (id_instalacion) => {
     const query = `
-        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios
+        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
         FROM Calificacion_Instalacion ci
         JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
         JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
         WHERE i.id_instalacion = @id_instalacion;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+}
+
+const getCantidadEstrellas = (id_instalacion) => {
+    const query = `
+        SELECT ci.calificacion, COUNT(*) AS cantidad_registros
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = 1
+        GROUP BY ci.calificacion
+        ORDER BY calificacion DESC;
     `;
 
     const parameters = [
@@ -242,6 +257,7 @@ module.exports = {
     getHorariosDisponibles,
     getHorariosReservados,
     getCalificaciones,
+    getCantidadEstrellas,
     getInstalacionWithCentroDeportivo,
     updateInstalacion,
     changeState,

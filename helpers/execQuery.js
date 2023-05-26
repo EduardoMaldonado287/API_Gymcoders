@@ -1,4 +1,4 @@
-const getConnection = require('./database');
+const { getConnection } = require('./database');
 const Request = require('tedious').Request;
 
 const execQuery = (query, parameters, callbackEvent) => {
