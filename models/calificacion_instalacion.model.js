@@ -28,6 +28,20 @@ const allCalificacionInstalacion = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getCalificacionPromedio = (id_instalacion) => {
+    const query = `
+        SELECT AVG(calificacion) AS promedio_calificaciones
+        FROM Calificacion_Instalacion
+        WHERE id_instalacion = @id_instalacion;
+    `;
+
+    const parameters = [
+        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},  
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const getLastId = () => {
     const query = `
         SELECT MAX(id_calificacion) AS lastId
@@ -39,5 +53,6 @@ const getLastId = () => {
 module.exports = {
     addCalificacionInstalacion,
     allCalificacionInstalacion,
+    getCalificacionPromedio,
     getLastId,
 };

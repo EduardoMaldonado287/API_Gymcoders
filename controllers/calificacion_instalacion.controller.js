@@ -45,4 +45,15 @@ calificacionInstalacionRoute.get('/', async(req, res) => {
         });
     });
 
+calificacionInstalacionRoute.get('/:id_instalacion/calificacion_promedio', async(req, res) => {
+    const { id_instalacion: id_instalacion } = req.params
+    calificacionInstalacionModel.getCalificacionPromedio(id_instalacion)
+    .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
+
 module.exports = calificacionInstalacionRoute;

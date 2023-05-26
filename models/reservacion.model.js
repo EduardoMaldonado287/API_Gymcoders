@@ -13,13 +13,14 @@ const addReservacion = (reservacionData) => {
     const query = `
         INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, cantidad_personas)
         VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @cantidad_personas)
+
     `;
     const parameters = [
         {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
         {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
-        {name: 'id_estatus', type: TYPES.Int, value: id_estatus},
+        // {name: 'id_estatus', type: TYPES.Int, value: id_estatus},
         {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'fecha', type: TYPES.Date, value: fecha},
+        {name: 'fecha', type: TYPES.VarChar, value: fecha},
         {name: 'hora', type: TYPES.VarChar, value: hora},
         {name: 'cantidad_personas', type: TYPES.Int, value: cantidad_personas},
     ];
