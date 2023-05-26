@@ -13,7 +13,6 @@ const avisosController = require('./controllers/avisos.controller.js');
 
 const intervaloTiempoController = require('./controllers/intervalo_tiempo.controller.js');
 const instalacionController = require('./controllers/instalacion.controller.js');
-const participantesController = require('./controllers/participantes.controller.js');
 
 const reservacionController = require('./controllers/reservacion.controller.js');
 const calificacionInstalacionController = require('./controllers/calificacion_instalacion.controller.js');
@@ -21,8 +20,6 @@ const registroGimnasioController = require('./controllers/registro_gimnasio.cont
 const gimnasioController = require('./controllers/gimnasio.controller.js');
 
 const deporteController = require('./controllers/deporte.controller.js');
-const testController = require('./queryTest.js');
-
 
 dotenv.config();
 
@@ -63,7 +60,6 @@ app.use('/avisos', avisosController);
 
 app.use('/intervalo_tiempo', intervaloTiempoController);
 app.use('/instalacion', instalacionController);
-app.use('/participantes', participantesController);
 
 app.use('/reservacion', reservacionController);
 app.use('/calificacion_instalacion', calificacionInstalacionController);
@@ -71,9 +67,6 @@ app.use('/registro_gimnasio', registroGimnasioController);
 app.use('/gimnasio', gimnasioController);
 
 app.use('/deporte', deporteController);
-
-app.use('/test', testController);
-
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
 
