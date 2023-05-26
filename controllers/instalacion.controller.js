@@ -76,29 +76,15 @@ instalacionRoute.get('/', async(req, res) => {
         });
     });
 
-    // Cambiar el query a otra cosa
-instalacionRoute.get('/get_horarios_disponibles', async (req, res) => {
-try {
-    console.log("intento sql connection")
-    await sql.connect(configConnection);
-    const request = new sql.Request();
-    
-    const id_instalacion = req.body.id_instalacion;
-    const fecha = req.body.fecha;
-    const query = `
-    EXEC ObtenerHorariosDisponibles @id_instalacion = ${id_instalacion}, @fecha = '${fecha}';
-    `
-    ;
-
-    const result = await request.query(query);
-
-    res.send(result.recordset);
-} catch (err) {
-    console.error(err);
-    res.status(500).send('Error al ejecutar el query');
-} finally {
-    sql.close();
-}
+instalacionRoute.get('/:id', async(req, res) => {
+    const {id: id_instalacion} = req.params;
+    instalacionModel.getByIDinstalacion(id_instalacion)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
 });
 
 instalacionRoute.get('/:id/con_centro_deportivo', async(req, res) => {
@@ -136,17 +122,6 @@ instalacionRoute.get('/:id/calificaciones/cantidad_estrellas', async(req, res) =
         });
     });
 
-instalacionRoute.get('/:id', async(req, res) => {
-    const {id: id_instalacion} = req.params;
-    instalacionModel.getByIDinstalacion(id_instalacion)
-    .then(data => {
-        res.status(200).json({ data });
-    })
-    .catch(error => {
-        res.status(500).json({ error });
-    });
-});
-
 instalacionRoute.get('/:id/horarios_reservados_en_fecha/:fecha', async(req, res) => {
     const {id: id_instalacion, fecha: fecha} = req.params;
     instalacionModel.getHorariosReservados(id_instalacion, fecha)
@@ -158,16 +133,29 @@ instalacionRoute.get('/:id/horarios_reservados_en_fecha/:fecha', async(req, res)
     });
 });
 
-instalacionRoute.get('/:id/get_horarios_en_fecha/:fecha', async(req, res) => {
-    const {id: id_instalacion, fecha: fecha} = req.params;
-    instalacionModel.getHorariosDisponibles(id_instalacion, fecha)
-    .then(data => {
-        res.status(200).json({ data });
-    })
-    .catch(error => {
-        res.status(500).json({ error });
+// Cambiar el query a otra cosa
+instalacionRoute.get('/:id_instalacion/get_horarios_disponibles/fecha/:fecha', async (req, res) => {
+    try {
+        await sql.connect(configConnection);
+        const request = new sql.Request();
+        const id_instalacion = req.params.id_instalacion;
+        const fecha = req.params.fecha;
+        
+        const query = `
+        EXEC ObtenerHorariosDisponibles @id_instalacion = ${id_instalacion}, @fecha = '${fecha}';
+        `
+        ;
+    
+        const result = await request.query(query);
+    
+        res.send(result.recordset);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error al ejecutar el query');
+    } finally {
+        sql.close();
+    }
     });
-});
 
 instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     function hasImageFile(){
@@ -190,6 +178,7 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     const {
             id_centro_deportivo,
             id_deporte,
+            id_intervalo,
             nombre,
             hora_inicial_es,
             hora_final_es,
@@ -200,6 +189,7 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
             id_instalacion,
             id_centro_deportivo,
             id_deporte,
+            id_intervalo,
             nombre,
             imagen,
             hora_inicial_es,

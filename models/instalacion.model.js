@@ -78,30 +78,6 @@ const getInstalacionWithCentroDeportivo = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
-const getHorariosDisponibles = (id_instalacion, fecha) => {
-    const query = `
-        SELECT lh.hora
-        FROM Lista_horas lh
-        LEFT JOIN (
-            SELECT r.hora
-            FROM Reservacion r
-            JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-            WHERE r.fecha = '2023-05-25'
-            AND i.id_instalacion = 1
-        ) AS reservas ON lh.hora = reservas.hora
-        WHERE lh.hora >= '08:00:00'
-        AND lh.hora <= '20:00:00'
-        AND reservas.hora IS NULL;
-    `;
-
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-        { name: 'fecha', type: TYPES.Date, value: fecha },
-    ];
-
-    return execQuery.execReadCommand(query, parameters);
-};
-
 const getHorariosReservados = (id_instalacion, fecha) => {
     const query = `
         SELECT r.hora
@@ -157,6 +133,7 @@ const updateInstalacion = (instalacionData) => {
     const {
         id_instalacion,
         id_centro_deportivo,
+        id_intervalo,
         nombre,
         id_deporte,
         imagen,
@@ -173,7 +150,7 @@ const updateInstalacion = (instalacionData) => {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo, 
-            nombre = @nombre, id_deporte = @id_deporte,
+            nombre = @nombre, id_deporte = @id_deporte, id_intervalo = @id_intervalo,
             hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
             hora_final_fds = @hora_final_fds
             WHERE id_instalacion = @id_instalacion
@@ -182,7 +159,7 @@ const updateInstalacion = (instalacionData) => {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo,
-            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen,
+            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen, @id_intervalo = @id_intervalo,
             hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
             hora_final_fds = @hora_final_fds
             WHERE id_instalacion = @id_instalacion
@@ -193,6 +170,7 @@ const updateInstalacion = (instalacionData) => {
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.VarChar, value: id_centro_deportivo },
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
@@ -248,13 +226,10 @@ const getLastId = () => {
     return execQuery.execReadCommand(query);
 };
 
-
-
 module.exports = {
     addInstalacion,
     allInstalacion,
     getByIDinstalacion,
-    getHorariosDisponibles,
     getHorariosReservados,
     getCalificaciones,
     getCantidadEstrellas,
