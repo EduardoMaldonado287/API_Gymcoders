@@ -7,11 +7,12 @@ const addReservacion = (reservacionData) => {
         id_instalacion,
         matricula,
         fecha,
-        hora
+        hora,
+        cantidad_personas
     } = reservacionData;
     const query = `
-        INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora)
-        VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora)
+        INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, cantidad_personas)
+        VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @cantidad_personas)
     `;
     const parameters = [
         {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
@@ -20,6 +21,7 @@ const addReservacion = (reservacionData) => {
         {name: 'matricula', type: TYPES.VarChar, value: matricula},
         {name: 'fecha', type: TYPES.Date, value: fecha},
         {name: 'hora', type: TYPES.VarChar, value: hora},
+        {name: 'cantidad_personas', type: TYPES.Int, value: cantidad_personas},
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

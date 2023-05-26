@@ -9,13 +9,15 @@ reservacionRoute.post('/matricula/:id', async (req, res) => {
         const {id: matricula } = req.params
         const {
             fecha,
-            hora
+            hora,
+            cantidad_personas
         } = req.body;
         await reservacionModel.addReservacion({
             id_reservacion,
             matricula,
             fecha,
-            hora
+            hora,
+            cantidad_personas
         })
         .then((rowCount, more) => {
                 res.status(200).json(
