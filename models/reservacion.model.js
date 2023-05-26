@@ -20,7 +20,7 @@ const addReservacion = (reservacionData) => {
         {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
         // {name: 'id_estatus', type: TYPES.Int, value: id_estatus},
         {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'fecha', type: TYPES.VarChar, value: fecha},
+        {name: 'fecha', type: TYPES.Date, value: fecha},
         {name: 'hora', type: TYPES.VarChar, value: hora},
         {name: 'cantidad_personas', type: TYPES.Int, value: cantidad_personas},
     ];
