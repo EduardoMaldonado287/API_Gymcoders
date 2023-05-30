@@ -95,39 +95,23 @@ const getHorariosReservados = (id_instalacion, fecha) => {
     return execQuery.execReadCommand(query, parameters);
 }
 
-// const getCalificaciones = (id_instalacion) => {
-//     const query = `
-//         SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
-//         FROM Calificacion_Instalacion ci
-//         JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
-//         JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-//         WHERE i.id_instalacion = @id_instalacion;
-//     `;
+const getCantidadReservacionesEnFechas = (id_instalacion, fecha_inicial, fecha_final) => {
+    const query = `
+        SELECT fecha, COUNT(*) AS cantidad_reservas
+        FROM Reservacion
+        WHERE id_instalacion = @id_instalacion
+        AND fecha BETWEEN @fecha_inicial AND @fecha_final
+        GROUP BY fecha;
+    `;
 
-//     const parameters = [
-//         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-//     ];
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+        { name: 'fecha_inicial', type: TYPES.Date, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.Date, value: fecha_final },
+    ];
 
-//     return execQuery.execReadCommand(query, parameters);
-// }
-
-// const getCantidadEstrellas = (id_instalacion) => {
-//     const query = `
-//         SELECT ci.calificacion, COUNT(*) AS cantidad_registros
-//         FROM Calificacion_Instalacion ci
-//         JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
-//         JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-//         WHERE i.id_instalacion = 1
-//         GROUP BY ci.calificacion
-//         ORDER BY calificacion DESC;
-//     `;
-
-//     const parameters = [
-//         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-//     ];
-
-//     return execQuery.execReadCommand(query, parameters);
-// }
+    return execQuery.execReadCommand(query, parameters);
+}
 
 const updateInstalacion = (instalacionData) => {
     const {
@@ -165,7 +149,6 @@ const updateInstalacion = (instalacionData) => {
             WHERE id_instalacion = @id_instalacion
         `;
     }
-
 
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
@@ -227,9 +210,8 @@ module.exports = {
     addInstalacion,
     allInstalacion,
     getByIDinstalacion,
+    getCantidadReservacionesEnFechas,
     getHorariosReservados,
-    // getCalificaciones,
-    // getCantidadEstrellas,
     getInstalacionWithCentroDeportivo,
     updateInstalacion,
     changeState,

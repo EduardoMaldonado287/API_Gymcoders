@@ -98,30 +98,6 @@ instalacionRoute.get('/:id/con_centro_deportivo', async(req, res) => {
         });
     });
 
-// instalacionRoute.get('/:id/calificaciones', async(req, res) => {
-//     const {id: id_instalacion} = req.params
-//     instalacionModel.getCalificaciones(id_instalacion)
-//     .then(data => {
-//         console.log(data)
-//             res.status(200).json({ data });
-//         })
-//         .catch(error => {
-//             res.status(500).json({ error });
-//         });
-//     });
-
-// instalacionRoute.get('/:id/calificaciones/cantidad_estrellas', async(req, res) => {
-//     const {id: id_instalacion} = req.params
-//     instalacionModel.getCantidadEstrellas(id_instalacion)
-//     .then(data => {
-//         console.log(data)
-//             res.status(200).json({ data });
-//         })
-//         .catch(error => {
-//             res.status(500).json({ error });
-//         });
-//     });
-
 instalacionRoute.get('/:id/horarios_reservados_en_fecha/:fecha', async(req, res) => {
     const {id: id_instalacion, fecha: fecha} = req.params;
     instalacionModel.getHorariosReservados(id_instalacion, fecha)
@@ -144,7 +120,7 @@ instalacionRoute.get('/:id_instalacion/get_horarios_disponibles/fecha/:fecha', a
         const fecha = new Date(req.params.fecha);
         const formattedFecha = fecha.toISOString().split('T')[0];   
         const query = `
-        EXEC ObtenerHorariosDisponibles @id_instalacion = ${id_instalacion}, @fecha = '${formattedFecha}';
+            EXEC ObtenerHorariosDisponibles @id_instalacion = ${id_instalacion}, @fecha = '${formattedFecha}';
         `
         ;
     
@@ -158,6 +134,18 @@ instalacionRoute.get('/:id_instalacion/get_horarios_disponibles/fecha/:fecha', a
         sql.close();
     }
     });
+
+
+instalacionRoute.get('/:id/estadisticas_reservas_por_dia/fecha_inicial/:fecha_inicial/fecha_final/:fecha_final', async (req, res) => {
+    const {id:id_instalacion, fecha_inicial: fecha_inicial, fecha_final: fecha_final } = req.params
+    instalacionModel.getCantidadReservacionesEnFechas(id_instalacion, fecha_inicial, fecha_final)
+    .then(data => {
+        res.status(200).json({ data });
+    })
+    .catch(error => {
+        res.status(500).json({ error });
+    });
+});
 
 instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
     function hasImageFile(){
