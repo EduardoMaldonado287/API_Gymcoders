@@ -95,39 +95,39 @@ const getHorariosReservados = (id_instalacion, fecha) => {
     return execQuery.execReadCommand(query, parameters);
 }
 
-const getCalificaciones = (id_instalacion) => {
-    const query = `
-        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
-        FROM Calificacion_Instalacion ci
-        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
-        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-        WHERE i.id_instalacion = @id_instalacion;
-    `;
+// const getCalificaciones = (id_instalacion) => {
+//     const query = `
+//         SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
+//         FROM Calificacion_Instalacion ci
+//         JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+//         JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+//         WHERE i.id_instalacion = @id_instalacion;
+//     `;
 
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-    ];
+//     const parameters = [
+//         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+//     ];
 
-    return execQuery.execReadCommand(query, parameters);
-}
+//     return execQuery.execReadCommand(query, parameters);
+// }
 
-const getCantidadEstrellas = (id_instalacion) => {
-    const query = `
-        SELECT ci.calificacion, COUNT(*) AS cantidad_registros
-        FROM Calificacion_Instalacion ci
-        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
-        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-        WHERE i.id_instalacion = 1
-        GROUP BY ci.calificacion
-        ORDER BY calificacion DESC;
-    `;
+// const getCantidadEstrellas = (id_instalacion) => {
+//     const query = `
+//         SELECT ci.calificacion, COUNT(*) AS cantidad_registros
+//         FROM Calificacion_Instalacion ci
+//         JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+//         JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+//         WHERE i.id_instalacion = 1
+//         GROUP BY ci.calificacion
+//         ORDER BY calificacion DESC;
+//     `;
 
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-    ];
+//     const parameters = [
+//         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+//     ];
 
-    return execQuery.execReadCommand(query, parameters);
-}
+//     return execQuery.execReadCommand(query, parameters);
+// }
 
 const updateInstalacion = (instalacionData) => {
     const {
@@ -197,9 +197,6 @@ const changeState = (id_instalacion) => {
 
 const deleteInstalacion = (id_instalacion) => {
     const query = `
-        DELETE FROM Participantes
-        WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion = @id_instalacion);
-        
         -- Eliminar registros de reservaciones relacionadas
         DELETE FROM Reservacion
         WHERE id_instalacion = @id_instalacion;
@@ -231,8 +228,8 @@ module.exports = {
     allInstalacion,
     getByIDinstalacion,
     getHorariosReservados,
-    getCalificaciones,
-    getCantidadEstrellas,
+    // getCalificaciones,
+    // getCantidadEstrellas,
     getInstalacionWithCentroDeportivo,
     updateInstalacion,
     changeState,

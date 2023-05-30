@@ -45,6 +45,30 @@ calificacionInstalacionRoute.get('/', async(req, res) => {
         });
     });
 
+calificacionInstalacionRoute.get('/:id/calificaciones', async(req, res) => {
+    const {id: id_instalacion} = req.params
+    calificacionInstalacionModel.getCalificaciones(id_instalacion)
+    .then(data => {
+        console.log(data)
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
+
+calificacionInstalacionRoute.get('/:id/calificaciones/cantidad_estrellas', async(req, res) => {
+    const {id: id_instalacion} = req.params
+    calificacionInstalacionModel.getCantidadEstrellas(id_instalacion)
+    .then(data => {
+        console.log(data)
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
+
 calificacionInstalacionRoute.get('/:id_instalacion/calificacion_promedio', async(req, res) => {
     const { id_instalacion: id_instalacion } = req.params
     calificacionInstalacionModel.getCalificacionPromedio(id_instalacion)

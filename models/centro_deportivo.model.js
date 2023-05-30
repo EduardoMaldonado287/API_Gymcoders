@@ -147,11 +147,7 @@ const changeState = (id_centro_deportivo) => {
 };
 
 const deleteCentroDeportivo = (id_centro_deportivo) => {
-    const query = `
-    -- Eliminar los participantes de las reservaciones relacionadas
-    DELETE FROM Participantes
-    WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));
-    
+    const query = `    
     -- Eliminar las calificaciones de las reservaciones relacionadas
     DELETE FROM Calificacion_Instalacion
     WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));

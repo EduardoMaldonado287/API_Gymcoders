@@ -28,11 +28,47 @@ const allCalificacionInstalacion = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getCalificaciones = (id_instalacion) => {
+    const query = `
+        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = @id_instalacion;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+}
+
+const getCantidadEstrellas = (id_instalacion) => {
+    const query = `
+        SELECT ci.calificacion, COUNT(*) AS cantidad_registros
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = 1
+        GROUP BY ci.calificacion
+        ORDER BY calificacion DESC;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+}
+
 const getCalificacionPromedio = (id_instalacion) => {
     const query = `
-        SELECT AVG(calificacion) AS promedio_calificaciones
-        FROM Calificacion_Instalacion
-        WHERE id_instalacion = @id_instalacion;
+        SELECT AVG(ci.calificacion) AS promedio_calificaciones
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = @id_instalacion;
     `;
 
     const parameters = [
@@ -53,6 +89,8 @@ const getLastId = () => {
 module.exports = {
     addCalificacionInstalacion,
     allCalificacionInstalacion,
+    getCalificaciones,
+    getCantidadEstrellas,
     getCalificacionPromedio,
     getLastId,
 };
