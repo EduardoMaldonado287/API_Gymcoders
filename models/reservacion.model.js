@@ -11,14 +11,23 @@ const addReservacion = (reservacionData) => {
         cantidad_personas
     } = reservacionData;
     const query = `
-        INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, cantidad_personas)
-        VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @cantidad_personas)
+        IF EXISTS (
+            SELECT 1
+            FROM Reservacion r
+            JOIN Alumno a ON r.matricula = a.matricula
+            WHERE r.fecha = @fecha
+            AND r.id_instalacion = @id_instalacion
+            AND a.matricula = @matricula
+        )
+            RAISERROR('El alumno ya tiene una reserva en la instalación en el día especificado.');
+        ELSE
+            INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, cantidad_personas)
+                VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @cantidad_personas)
 
     `;
     const parameters = [
         {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
         {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
-        // {name: 'id_estatus', type: TYPES.Int, value: id_estatus},
         {name: 'matricula', type: TYPES.VarChar, value: matricula},
         {name: 'fecha', type: TYPES.Date, value: fecha},
         {name: 'hora', type: TYPES.VarChar, value: hora},
