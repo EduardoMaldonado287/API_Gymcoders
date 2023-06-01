@@ -1,6 +1,6 @@
 const instalacionRoute = require('express').Router();
 const instalacionModel = require('../models/instalacion.model');
-const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
+const { addImage, deleteImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
 const sql = require('mssql');
 const { configConnection } = require('../helpers/database');

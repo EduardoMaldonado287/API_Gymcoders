@@ -28,6 +28,22 @@ function addImage(blobName, stream, streamLength)
   return true;
 }
 
+function deleteImage(blobName) {
+  blobService.deleteBlobIfExists(containerName, blobName, (err, result) => {
+    if (err) {
+      console.log(err);
+      return false;
+    } else if (result) {
+      console.log("Imagen eliminada exitosamente");
+      return true;
+    } else {
+      console.log("La imagen no existe en Azure Storage");
+      return false;
+    }
+  });
+}
+
+
 module.exports = {
     multer,
     inMemoryStorage,
@@ -36,6 +52,7 @@ module.exports = {
     azureStorage,
     blobService,
     containerName,
+    deleteImage,
     getStream,
     getBlobName,
     addImage,
