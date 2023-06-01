@@ -26,11 +26,14 @@ const allAlumno = () => {
     return execQuery.execReadCommand(query);
 }; 
 // Buscamos al alumno especifico
-const  findAlumno= async (matricula) =>{
+const  findAlumno = async (matricula) =>{
     const query = `
-    SELECT * FROM [dbo].[ALUMNO] WHERE matricula = ${matricula}
+     SELECT * FROM [dbo].[ALUMNO] WHERE matricula = @matricula
     `
-    return execQuery.execWriteCommand(query);
+    const parameters = [
+        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+    ];
+    return execQuery.execReadCommand(query,parameters);
 }
 
 const getReservaciones = (matricula) => {

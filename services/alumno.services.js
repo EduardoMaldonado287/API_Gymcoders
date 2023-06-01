@@ -1,11 +1,8 @@
-const privatekey = `
-VaCP8FxYJ2ZfxcyPN67tyQY0y_pNehd3xK1VvawUFvwEdmrpWfyQ1Uv5MqXkXnOLKryksIrE5tQinJXmb4HbQVGoFwuO2S46I1oPJBRc7ZmxtwhixKM5e0ssSdq8GIH3RQNlZtrWMAfbBvWwLXf-TflKYj8CYjm7xDswFUxh1Cp68-t8ySe-w-q13JeGUPyu50aK9h8wE5ChGMDyOvsYaOKNWjvQ-MxD3qywDLDna0tddr5w2X6ve4gjEz4CEbtxNcDP55QrbrevYCk0AgUcuTiHo5Ok2KjFcrijrf3sd77ZsPwuBvD6ZlpDa9NMwx6eYDt3FmXbws3ppNuaBWWK
-`
-const publicKey = `
-43CmWwO9VBQMhdnRohaDl5Y421N_lACCaysAq5vv4a3oxf4-9jGlTn-N7AlqiwZiyxz1dvFOHk64D7I7J3y87ZHJoyZS_Q-2u9fU3SeIedmKQbQdjMUtaZBWYrJyWAkV8ljeyyJuryPJ-TYdJwf2BCnj9x3gDhsnVCEcrgPi3sIi3bxHeATAG62g-Lj04V1m0UVgsgNOiSgNAaUKnvRoZvcZ__WMlIjpDWobLsx1aEYm9LnAhTP39CuR0I-RM1xdEFY5WyyakB1SRuGBx9kkP4gtMr6nqZMmaa8wULS16LMKHXpVFES8ifRoB4yVcHg40gS-KsvX9lY8-Ge4sQCz
-`
+const privatekey = '2633e3b648dcad79a0591411f061a858e0a4063500f3e09a264e9f3323fdd9c2e610430216aa4176b3b5371c59e92116f9bbaa2dcc6670d5dc262cf9f54796ec'
+const publicKey = 'd971cd7b612e665d81aa73116ee07983a3d2cc5558ef7824157258e73c35e2c0ef1f7789acf109b233d9fe23b02344ea38ff99c2b31c27fbedb1fd582b3efed7'
 
 const jwt = require('jsonwebtoken');
+
 
 function signJWT(payload,expiresIn){
     return jwt.sign(payload,privatekey,expiresIn);
@@ -13,8 +10,9 @@ function signJWT(payload,expiresIn){
 function verifyJWT(token){
     try{
         const decoded = jwt.verify(token,publicKey);
+        return token
     }catch(error){
         return error
     }
 }
-module.exports(verifyJWT,signJWT)
+module.exports= {verifyJWT,signJWT}

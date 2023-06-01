@@ -31,16 +31,23 @@ alumnoRoute.post('/', async (req, res) => {
 alumnoRoute.post("/login",async(req,res)=>{
     // PREGUNTARLE A EDUARDO COMO LLAMA A UN ALUMNO
     const {matricula,password} = req.body
+
     const alumno = await alumnoModel.findAlumno(matricula)
-    if (matricula != alumno.matricula || password != alumno.password){
+    // const alumnoM = ""
+    // const alumnoP = ""
+    // alumnoM,alumnoP= get_values(alumno
+    
+    if (matricula != alumno[0].matricula || password != alumno[0].password){
         res.status(401).send("usuario no identificado")
     }
-    const accessTkn = signJWT({matricula:matricula,password:password},"2h");
+ 
+    const accessTkn = signJWT({matricula:matricula,password:password},{expiresIn:'1d'});
     res.cookie('accestoken',accessTkn,{
         maxAge:3000,
         httpOnly:true,
     })
-    res.send(verifyJWT(accessTkn))
+    res.send("Usuario Logeado")
+    // res.send(verifyJWT(accessTkn))
 })
 
 alumnoRoute.get('/', async(req, res) => {
