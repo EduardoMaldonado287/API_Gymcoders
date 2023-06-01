@@ -6,16 +6,19 @@
     "env": "^0.0.2",
     "express": "^4.18.2",
     "into-stream": "^6.0.0",
+    "jsonwebtoken": "^9.0.0",
     "mssql": "^9.1.1",
     "multer": "^1.4.5-lts.1",
     "node": "^19.8.1",
+    "nodemon": "^2.0.22",
     "tedious": "^16.0.0"
   },
   "name": "api_gymcoders",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
