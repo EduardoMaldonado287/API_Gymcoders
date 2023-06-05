@@ -26,6 +26,18 @@ const allDeporte = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getByIDdeporte = (id_deporte) => {
+    const query = `
+        select * from deporte 
+        where id_deporte = @id_deporte
+    `;
+    const parameters = [
+        {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
+    ];
+    return execQuery.execReadCommand(query, parameters);
+};
+
+
 const updateDeporte = (deporteData) => {
     const {
         id_deporte,
@@ -58,22 +70,6 @@ const updateDeporte = (deporteData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const deleteDeporte = (id_deporte) => {
-    const query = `
-        DELETE FROM Deporte
-        WHERE id_deporte = @id_deporte
-        AND id_deporte NOT IN (
-            SELECT id_deporte
-            FROM Instalacion
-        );
-
-    `;
-    const parameters = [
-        {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
-    ];
-    return execQuery.execWriteCommand(query, parameters);
-};
-
 const tieneInstalaciones = (id_deporte) => {
     const query = `
         SELECT CASE WHEN EXISTS (
@@ -96,10 +92,27 @@ const getLastId = () => {
     return execQuery.execReadCommand(query);
 };
 
+const deleteDeporte = (id_deporte) => {
+    const query = `
+        DELETE FROM Deporte
+        WHERE id_deporte = @id_deporte
+        AND id_deporte NOT IN (
+            SELECT id_deporte
+            FROM Instalacion
+        );
+
+    `;
+    const parameters = [
+        {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
 module.exports = {
     addDeporte,
     allDeporte,
     updateDeporte,
+    getByIDdeporte,
     deleteDeporte,
     tieneInstalaciones,
     getLastId,

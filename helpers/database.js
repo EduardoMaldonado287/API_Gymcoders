@@ -32,7 +32,7 @@ const getConnection = () => {
         const connectionInstance = new Connection(configConnection);
         connectionInstance.on('connect', (error) => {
             if(!error) {
-                console.log("Conexion con la base de datos exitosa")
+                // console.log("Conexion con la base de datos exitosa")
                 resolve(connectionInstance);
             }
             else {

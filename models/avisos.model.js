@@ -36,6 +36,19 @@ const allAvisos = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getByIDAviso = (id_aviso) => {
+    const query = `
+        SELECT * FROM [dbo].[avisos]
+        WHERE id_aviso = @id_aviso
+    `;
+
+    const parameters = [
+        { name: 'id_aviso', type: TYPES.Int, value: id_aviso },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const updateAvisos = (avisosData) => {
     const {
         id_aviso,
@@ -99,4 +112,5 @@ module.exports = {
     updateAvisos,
     deleteAvisos,
     getLastId,
+    getByIDAviso,
 };

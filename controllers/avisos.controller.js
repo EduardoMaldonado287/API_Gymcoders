@@ -1,20 +1,11 @@
 const avisosRoute = require('express').Router();
 const avisosModel = require('../models/avisos.model');
-const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
+const { addImage, uploadStrategy, deleteImage, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
 avisosRoute.post('/num_nomina/:id_nomina', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-    
     try {
         var imagen;
-        if (hasImageFile() == true){
+        if (req.file){
             const blobName = getBlobName(req.file.originalname);
             imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
             addImage(blobName, req.file.buffer, req.file.buffer.length);
@@ -71,23 +62,20 @@ avisosRoute.get('/', async(req, res) => {
     });
 
 avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
+    let imagen;
+    const {id: id_aviso} = req.params;
 
-    var imagen;
-    if (hasImageFile() == true){
-        const blobName = getBlobName(req.file.originalname);
+    if (req.file){
+        let blobName = getBlobName(req.file.originalname);
         imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
         addImage(blobName, req.file.buffer, req.file.buffer.length);
+
+        const avisoInfo = await avisosModel.getByIDAviso(id_aviso);
+        const imageUrl = avisoInfo[0].imagen
+        blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+        deleteImage(blobName)
     }
 
-    const {id: id_aviso} = req.params;
     const {
             titulo,
             contenido,
@@ -120,6 +108,12 @@ avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
 
 avisosRoute.delete('/:id', async (req, res) => {
     const {id: id_aviso} = req.params;
+
+    const avisoInfo = await avisosModel.getByIDAviso(id_aviso);
+    const imageUrl = avisoInfo[0].imagen
+    const blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    deleteImage(blobName)
+
     avisosModel.deleteAvisos(id_aviso)
     .then((rowCount, more) => {
             res.status(200).json({ rowCount, more });

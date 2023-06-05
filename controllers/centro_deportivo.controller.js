@@ -1,7 +1,7 @@
-const centroDeportivoRoute = require('express').Router(); 
+const centroDeportivoRoute = require('express').Router();
 const centroDeportivoModel = require('../models/centro_deportivo.model');
 
-const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
+const { addImage, deleteImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
 centroDeportivoRoute.post('/', uploadStrategy, async (req, res) => {
     const blobName = getBlobName(req.file.originalname);
@@ -108,29 +108,26 @@ centroDeportivoRoute.get('/:id/deporte/:id2/instalaciones', async(req, res) => {
 });
 
 centroDeportivoRoute.put('/:id', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-    
     try {
         var imagen;
-        if (hasImageFile() == true){
-            const blobName = getBlobName(req.file.originalname);
-            imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
-            addImage(blobName, req.file.buffer, req.file.buffer.length);
-        }
-
         const {id: id_centro_deportivo} = req.params;
         const {
                 nombre,
                 ubicacion,
                 esta_habilitado
         } = req.body;
+
+        if (req.file){
+            let blobName = getBlobName(req.file.originalname);
+            imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
+            addImage(blobName, req.file.buffer, req.file.buffer.length);
+
+            const centroDeportivoInfo = await centroDeportivoModel.getByIDcentroDeportivo(id_centro_deportivo);
+            let imageUrl = centroDeportivoInfo[0].imagen
+            blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+            deleteImage(blobName)
+        }
+
         centroDeportivoModel.updateCentroDeportivo({
                 id_centro_deportivo,
                 nombre,
@@ -177,6 +174,20 @@ centroDeportivoRoute.put('/:id/cambiar_estado', async (req, res) => {
 
 centroDeportivoRoute.delete('/:id', async (req, res) => {
     const {id: id_centro_deportivo} = req.params;
+
+    const centroDeportivoInfo = await centroDeportivoModel.getByIDcentroDeportivo(id_centro_deportivo);
+    let imageUrl = centroDeportivoInfo[0].imagen
+    let blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    deleteImage(blobName)
+
+    const instalaciones = await centroDeportivoModel.getInstalacionesInCentroDeportivo(id_centro_deportivo)
+    for (let instalacion of instalaciones) {
+        imageUrl = instalacion.imagen
+        blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+        deleteImage(blobName)
+        console.log(blobName)
+    }
+
     centroDeportivoModel.deleteCentroDeportivo(id_centro_deportivo)
     .then((rowCount, more) => {
         res.status(200).json({ rowCount, more });
@@ -184,6 +195,7 @@ centroDeportivoRoute.delete('/:id', async (req, res) => {
     .catch(error => {
         res.status(500).json({ error });
     })
+    res.status(200).json()
 });
 
 module.exports = centroDeportivoRoute;

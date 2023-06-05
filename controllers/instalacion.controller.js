@@ -6,19 +6,12 @@ const sql = require('mssql');
 const { configConnection } = require('../helpers/database');
 
 instalacionRoute.post('/', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
     try {
         var imagen;
-        if (hasImageFile() == true){
+        if (req.file){
             const blobName = getBlobName(req.file.originalname);
+            console.log(req.file.originalname)
+            console.log("el blob name es: ", blobName)
             imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
             addImage(blobName, req.file.buffer, req.file.buffer.length);
         }
@@ -87,6 +80,7 @@ instalacionRoute.get('/:id', async(req, res) => {
     });
 });
 
+
 instalacionRoute.get('/:id/con_centro_deportivo', async(req, res) => {
     const {id: id_instalacion} = req.params
     instalacionModel.getInstalacionWithCentroDeportivo(id_instalacion)
@@ -125,7 +119,6 @@ instalacionRoute.get('/:id_instalacion/get_horarios_disponibles/fecha/:fecha', a
         ;
     
         const result = await request.query(query);
-    
         res.send(result.recordset);
     } catch (err) {
         console.error(err);
@@ -148,23 +141,20 @@ instalacionRoute.get('/:id/estadisticas_reservas_por_dia/fecha_inicial/:fecha_in
 });
 
 instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
+    let imagen;
+    const {id: id_instalacion} = req.params;
 
-    var imagen;
-    if (hasImageFile() == true){
-        const blobName = getBlobName(req.file.originalname);
+    if (req.file){
+        let blobName = getBlobName(req.file.originalname);
         imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
         addImage(blobName, req.file.buffer, req.file.buffer.length);
+
+        const instalacionInfo = await instalacionModel.getByIDinstalacion(id_instalacion);
+        const imageUrl = instalacionInfo[0].imagen
+        blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+        deleteImage(blobName)
     }
 
-    const {id: id_instalacion} = req.params;
     const {
             id_centro_deportivo,
             id_deporte,
@@ -219,9 +209,15 @@ instalacionRoute.put('/:id/cambiar_estado', async (req, res) => {
             res.status(500).json({error});
         });
     });
-
-instalacionRoute.delete('/:id', async (req, res) => {
+    
+instalacionRoute.delete('/', async (req, res) => {
     const {id: id_instalacion} = req.params;
+
+    const instalacionInfo = await instalacionModel.getByIDinstalacion(id_instalacion);
+    const imageUrl = instalacionInfo[0].imagen
+    const blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    deleteImage(blobName)
+
     instalacionModel.deleteInstalacion(id_instalacion)
     .then((rowCount, more) => {
             res.status(200).json({ rowCount, more });

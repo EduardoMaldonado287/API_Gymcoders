@@ -43,6 +43,19 @@ const allInstalacion = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getInstalacionImage = (id_instalacion) => {
+    const query = `
+        SELECT imagen FROM [dbo].[instalacion]
+        WHERE id_instalacion = @id_instalacion
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const getByIDinstalacion = (id_instalacion) => {
     const query = `
         SELECT * FROM [dbo].[instalacion]
@@ -198,6 +211,10 @@ const deleteInstalacion = (id_instalacion) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+const deleteAllInstalacionImages = () => {
+
+};
+
 const getLastId = () => {
     const query = `
         SELECT MAX(id_instalacion) AS lastId
@@ -209,6 +226,7 @@ const getLastId = () => {
 module.exports = {
     addInstalacion,
     allInstalacion,
+    getInstalacionImage,
     getByIDinstalacion,
     getCantidadReservacionesEnFechas,
     getHorariosReservados,
