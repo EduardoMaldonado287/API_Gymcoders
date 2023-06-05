@@ -19,19 +19,19 @@ const addReservacion = (reservacionData) => {
             AND r.id_instalacion = @id_instalacion
             AND a.matricula = @matricula
         )
-            RAISERROR('El alumno ya tiene una reserva en la instalación en el día especificado.');
+            THROW 50000, 'El alumno ya tiene una reserva en la instalación en el día especificado.', 1;
         ELSE
             INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, cantidad_personas)
                 VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @cantidad_personas)
 
     `;
     const parameters = [
-        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
-        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'fecha', type: TYPES.Date, value: fecha},
-        {name: 'hora', type: TYPES.VarChar, value: hora},
-        {name: 'cantidad_personas', type: TYPES.Int, value: cantidad_personas},
+        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion },
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
+        { name: 'fecha', type: TYPES.Date, value: fecha },
+        { name: 'hora', type: TYPES.VarChar, value: hora },
+        { name: 'cantidad_personas', type: TYPES.Int, value: cantidad_personas },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -50,7 +50,7 @@ const getByIDreservacion = (id_reservacion) => {
     `;
 
     const parameters = [
-        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
+        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion },
     ];
 
     return execQuery.execReadCommand(query, parameters);
@@ -67,8 +67,8 @@ const cambiarEstadoReservacion = (reservacionData) => {
         WHERE id_reservacion = @id_reservacion
     `;
     const parameters = [
-        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
-        {name: 'nuevo_estatus', type: TYPES.Int, value: nuevo_estatus},
+        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion },
+        { name: 'nuevo_estatus', type: TYPES.Int, value: nuevo_estatus },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -79,7 +79,7 @@ const deleteReservacion = (id_reservacion) => {
         WHERE id_reservacion= @id_reservacion
     `;
     const parameters = [
-        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion}
+        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

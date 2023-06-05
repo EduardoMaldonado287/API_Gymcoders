@@ -14,7 +14,7 @@ const addInstalacion = (instalacionData) => {
         hora_inicial_fds,
         hora_final_fds
     } = instalacionData;
-   
+
     const query = `
     INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
         nombre, id_deporte, imagen, hora_inicial_es, hora_final_es, hora_inicial_fds, hora_final_fds, esta_habilitada)
@@ -141,9 +141,9 @@ const updateInstalacion = (instalacionData) => {
     } = instalacionData;
 
     let query = ``;
-    
+
     // VERIFICAR LA FUNCIONALIDAD DE ESTA TABLA / update funciona
-    if (imagen === null || imagen === undefined){
+    if (imagen === null || imagen === undefined) {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo, 
@@ -186,7 +186,7 @@ const changeState = (id_instalacion) => {
         WHERE id_instalacion = @id_instalacion;
     `;
     const parameters = [
-        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

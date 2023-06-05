@@ -17,14 +17,14 @@ const addAvisos = (avisosData) => {
         VALUES (@id_aviso, @num_nomina, @titulo, @contenido, @imagen, @fecha_publicacion, @fecha_inicio, @fecha_fin)
     `;
     const parameters = [
-        {name: 'id_aviso', type: TYPES.Int, value: id_aviso},
-        {name: 'num_nomina', type: TYPES.VarChar, value: num_nomina},        
-        {name: 'titulo', type: TYPES.VarChar, value: titulo},
-        {name: 'contenido', type: TYPES.VarChar, value: contenido},
-        {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'fecha_publicacion', type: TYPES.DateTime, value: fecha_publicacion},
-        {name: 'fecha_inicio', type: TYPES.DateTime, value: fecha_inicio},    
-        {name: 'fecha_fin', type: TYPES.DateTime, value: fecha_fin},
+        { name: 'id_aviso', type: TYPES.Int, value: id_aviso },
+        { name: 'num_nomina', type: TYPES.VarChar, value: num_nomina },
+        { name: 'titulo', type: TYPES.VarChar, value: titulo },
+        { name: 'contenido', type: TYPES.VarChar, value: contenido },
+        { name: 'imagen', type: TYPES.VarChar, value: imagen },
+        { name: 'fecha_publicacion', type: TYPES.DateTime, value: fecha_publicacion },
+        { name: 'fecha_inicio', type: TYPES.DateTime, value: fecha_inicio },
+        { name: 'fecha_fin', type: TYPES.DateTime, value: fecha_fin },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -61,7 +61,7 @@ const updateAvisos = (avisosData) => {
     } = avisosData;
 
     let query = ``
-    if (imagen === null){
+    if (imagen === null) {
         query = `
             UPDATE [dbo].[avisos]
             SET titulo = @titulo, contenido = @contenido, fecha_publicacion = @fecha_publicacion, fecha_inicio = @fecha_inicio, fecha_fin = @fecha_fin
@@ -76,13 +76,13 @@ const updateAvisos = (avisosData) => {
     }
 
     const parameters = [
-        {name: 'id_aviso', type: TYPES.Int, value: id_aviso},
-        {name: 'titulo', type: TYPES.VarChar, value: titulo},
-        {name: 'contenido', type: TYPES.VarChar, value: contenido},
-        {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'fecha_publicacion', type: TYPES.DateTime, value: fecha_publicacion},
-        {name: 'fecha_inicio', type: TYPES.DateTime, value: fecha_inicio},    
-        {name: 'fecha_fin', type: TYPES.DateTime, value: fecha_fin},
+        { name: 'id_aviso', type: TYPES.Int, value: id_aviso },
+        { name: 'titulo', type: TYPES.VarChar, value: titulo },
+        { name: 'contenido', type: TYPES.VarChar, value: contenido },
+        { name: 'imagen', type: TYPES.VarChar, value: imagen },
+        { name: 'fecha_publicacion', type: TYPES.DateTime, value: fecha_publicacion },
+        { name: 'fecha_inicio', type: TYPES.DateTime, value: fecha_inicio },
+        { name: 'fecha_fin', type: TYPES.DateTime, value: fecha_fin },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -93,7 +93,7 @@ const deleteAvisos = (id_aviso) => {
         WHERE id_aviso= @id_aviso
     `;
     const parameters = [
-        {name: 'id_aviso', type: TYPES.Int, value: id_aviso}
+        { name: 'id_aviso', type: TYPES.Int, value: id_aviso }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

@@ -1,7 +1,7 @@
 const execQuery = require('../helpers/execQuery');
 const TYPES = require('tedious').TYPES;
 
-const addCalificacionInstalacion = (calificacionInstalacionData) => {        
+const addCalificacionInstalacion = (calificacionInstalacionData) => {
     const {
         id_calificacion,
         id_reservacion,
@@ -13,10 +13,10 @@ const addCalificacionInstalacion = (calificacionInstalacionData) => {
         VALUES (@id_calificacion, @id_reservacion, @calificacion, @comentarios)
     `;
     const parameters = [
-        {name: 'id_calificacion', type: TYPES.Int, value: id_calificacion},  
-        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
-        {name: 'calificacion', type: TYPES.TinyInt, value: calificacion},    
-        {name: 'comentarios', type: TYPES.VarChar, value: comentarios},      
+        { name: 'id_calificacion', type: TYPES.Int, value: id_calificacion },
+        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion },
+        { name: 'calificacion', type: TYPES.TinyInt, value: calificacion },
+        { name: 'comentarios', type: TYPES.VarChar, value: comentarios },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -72,7 +72,7 @@ const getCalificacionPromedio = (id_instalacion) => {
     `;
 
     const parameters = [
-        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},  
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
     ];
 
     return execQuery.execReadCommand(query, parameters);

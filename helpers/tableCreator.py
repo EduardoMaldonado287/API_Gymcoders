@@ -1,3 +1,10 @@
+"""
+
+    ARCHIVO PARA LA CREACION DE UN CRUD BÁSICO
+    DE UNA TABLA
+
+"""
+
 import re, time
 className = input("Ingrese el nombre de la clase: \n")
 classId = input("Ingrese el nombre del id de la clase: \n")

@@ -12,9 +12,9 @@ const addGimnasio = (gimnasioData) => {
         VALUES (@id_gimnasio, @aforo_maximo, @aforo_actual)
     `;
     const parameters = [
-        {name: 'id_gimnasio', type: TYPES.Int, value: id_gimnasio},
-        {name: 'aforo_maximo', type: TYPES.Int, value: aforo_maximo},    
-        {name: 'aforo_actual', type: TYPES.Int, value: aforo_actual},
+        { name: 'id_gimnasio', type: TYPES.Int, value: id_gimnasio },
+        { name: 'aforo_maximo', type: TYPES.Int, value: aforo_maximo },
+        { name: 'aforo_actual', type: TYPES.Int, value: aforo_actual },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -38,9 +38,24 @@ const updateGimnasio = (gimnasioData) => {
         WHERE id_gimnasio = @id_gimnasio
     `;
     const parameters = [
-        {name: 'id_gimnasio', type: TYPES.Int, value: id_gimnasio},
-        {name: 'aforo_maximo', type: TYPES.Int, value: aforo_maximo},    
-        {name: 'aforo_actual', type: TYPES.Int, value: aforo_actual},    
+        { name: 'id_gimnasio', type: TYPES.Int, value: id_gimnasio },
+        { name: 'aforo_maximo', type: TYPES.Int, value: aforo_maximo },
+        { name: 'aforo_actual', type: TYPES.Int, value: aforo_actual },
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
+const updateAforo = (gimnasioData) => {
+    const {
+        aforo_actual
+    } = gimnasioData;
+    const query = `
+        UPDATE gimnasio
+        SET  aforo_actual = @aforo_actual       
+        WHERE id_gimnasio = 1
+    `;
+    const parameters = [
+        { name: 'aforo_actual', type: TYPES.Int, value: aforo_actual },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -51,7 +66,7 @@ const deleteGimnasio = (id_gimnasio) => {
         WHERE id_gimnasio= @id_gimnasio
     `;
     const parameters = [
-        {name: 'id_gimnasio', type: TYPES.Int, value: id_gimnasio}
+        { name: 'id_gimnasio', type: TYPES.Int, value: id_gimnasio }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -68,6 +83,7 @@ module.exports = {
     addGimnasio,
     allGimnasio,
     updateGimnasio,
+    updateAforo,
     deleteGimnasio,
     getLastId,
 };

@@ -1,5 +1,13 @@
+/*
+
+    Por el momento los intervalos son constantes
+    y no se peuden editar, crear o borrar
+
+*/
+
+
 const intervaloTiempoRoute = require('express').Router();
-const intervaloTiempoModel = require('../models/intervalo_tiempo.model');    
+const intervaloTiempoModel = require('../models/intervalo_tiempo.model');
 
 intervaloTiempoRoute.post('/', async (req, res) => {
     try {
@@ -13,66 +21,66 @@ intervaloTiempoRoute.post('/', async (req, res) => {
             id_intervalo,
             tiempo
         })
-        .then((rowCount, more) => {
+            .then((rowCount, more) => {
                 res.status(200).json(
                     {
-                    data: {
-                        rowCount,
-                        more,
-                    id_intervalo
-                    }
-                });
+                        data: {
+                            rowCount,
+                            more,
+                            id_intervalo
+                        }
+                    });
             })
             .catch(error => {
-                res.status(500).json({error});
+                res.status(500).json({ error });
             });
-        } catch (error) {
-            res.status(500).json({ error });
-        }
-    });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
 
-intervaloTiempoRoute.get('/', async(req, res) => {
+intervaloTiempoRoute.get('/', async (req, res) => {
     intervaloTiempoModel.allIntervaloTiempo()
-    .then(data => {
+        .then(data => {
             res.status(200).json({ data });
         })
         .catch(error => {
             res.status(500).json({ error });
         });
-    });
+});
 
 intervaloTiempoRoute.put('/:id', async (req, res) => {
-    const {id: id_intervalo} = req.params;
+    const { id: id_intervalo } = req.params;
     const {
-            tiempo
+        tiempo
     } = req.body;
     intervaloTiempoModel.updateIntervaloTiempo({
-            id_intervalo,
-            tiempo
+        id_intervalo,
+        tiempo
     })
-    .then((rowCount, more) => {
+        .then((rowCount, more) => {
             res.status(200).json({
                 data: {
                     rowCount,
                     more,
-                id_intervalo
+                    id_intervalo
                 },
             });
         })
         .catch(error => {
-            res.status(500).json({error});
+            res.status(500).json({ error });
         });
-    });
+});
 
 intervaloTiempoRoute.delete('/:id', async (req, res) => {
-    const {id: id_intervalo} = req.params;
+    const { id: id_intervalo } = req.params;
     intervaloTiempoModel.deleteIntervaloTiempo(id_intervalo)
-    .then((rowCount, more) => {
+        .then((rowCount, more) => {
             res.status(200).json({ rowCount, more });
         })
         .catch(error => {
             res.status(500).json({ error });
         })
-    });
+});
 
 module.exports = intervaloTiempoRoute;

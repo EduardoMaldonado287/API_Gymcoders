@@ -1,3 +1,11 @@
+"""
+    Archivo para insertar datos en la tabla reservacion
+    de manera automatica tomando en cuenta los alumnos
+    y las instalaciones existentes
+    
+"""
+
+
 import requests
 import random
 from datetime import datetime, timedelta

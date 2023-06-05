@@ -11,8 +11,8 @@ const addRegistroGimnasio = (registroGimnasioData) => {
         VALUES (@fecha, @matricula)
     `;
     const parameters = [
-        {name: 'fecha', type: TYPES.VarChar, value: fecha},
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
+        { name: 'fecha', type: TYPES.VarChar, value: fecha },
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -34,8 +34,8 @@ const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) =
     `;
 
     const parameters = [
-        {name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial},
-        {name: 'fecha_final', type: TYPES.DateTime, value: fecha_final},
+        { name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.DateTime, value: fecha_final },
     ];
     return execQuery.execReadCommand(query, parameters);
 }
@@ -50,8 +50,8 @@ const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
     `;
 
     const parameters = [
-        {name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial},
-        {name: 'fecha_final', type: TYPES.DateTime, value: fecha_final},
+        { name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.DateTime, value: fecha_final },
     ];
     return execQuery.execReadCommand(query, parameters);
 }

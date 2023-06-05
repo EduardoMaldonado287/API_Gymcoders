@@ -4,7 +4,7 @@ const TYPES = require('tedious').TYPES;
 const addAlumno = (alumnoData) => {
     const {
         matricula,
-        password, 
+        password,
     } = alumnoData;
 
     const query = `
@@ -12,9 +12,9 @@ const addAlumno = (alumnoData) => {
         VALUES (@matricula, @password, @nombre)
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'password', type: TYPES.VarChar, value: password},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
+        { name: 'password', type: TYPES.VarChar, value: password },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -24,16 +24,16 @@ const allAlumno = () => {
         SELECT * FROM [dbo].[Alumno]
     `;
     return execQuery.execReadCommand(query);
-}; 
+};
 // Buscamos al alumno especifico
-const  findAlumno = async (matricula) =>{
+const findAlumno = async (matricula) => {
     const query = `
      SELECT * FROM [dbo].[ALUMNO] WHERE matricula = @matricula
     `
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
     ];
-    return execQuery.execReadCommand(query,parameters);
+    return execQuery.execReadCommand(query, parameters);
 }
 
 const getReservaciones = (matricula) => {
@@ -42,10 +42,10 @@ const getReservaciones = (matricula) => {
         where matricula = @matricula
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
     ];
     return execQuery.execReadCommand(query, parameters);
-}; 
+};
 
 const updateAlumno = (alumnoData) => {
     const {
@@ -59,9 +59,9 @@ const updateAlumno = (alumnoData) => {
         WHERE matricula = @matricula
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
+        { name: 'imagen', type: TYPES.VarChar, value: imagen },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -72,7 +72,7 @@ const deleteAlumno = (matricula) => {
         WHERE matricula = @matricula
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
