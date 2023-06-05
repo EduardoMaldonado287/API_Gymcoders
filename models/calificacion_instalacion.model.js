@@ -28,6 +28,7 @@ const allCalificacionInstalacion = () => {
     return execQuery.execReadCommand(query);
 };
 
+// Obtener las respectivas calificacoines de una instalación
 const getCalificaciones = (id_instalacion) => {
     const query = `
         SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
@@ -44,6 +45,7 @@ const getCalificaciones = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 }
 
+// Obtener la cantidad de veces que se repite una calificación
 const getCantidadEstrellas = (id_instalacion) => {
     const query = `
         SELECT ci.calificacion, COUNT(*) AS cantidad_registros
@@ -62,6 +64,7 @@ const getCantidadEstrellas = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 }
 
+// Obtener las calificacion promedio de una instalacion
 const getCalificacionPromedio = (id_instalacion) => {
     const query = `
         SELECT AVG(ci.calificacion) AS promedio_calificaciones

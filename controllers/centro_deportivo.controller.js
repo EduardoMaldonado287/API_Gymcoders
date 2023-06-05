@@ -61,17 +61,6 @@ centroDeportivoRoute.get('/', async (req, res) => {
         });
 });
 
-// // Ruta para obtener l
-// centroDeportivoRoute.get('/deportes', async(req, res) => {
-//     centroDeportivoModel.getCentroDeportivoAndDeportes()
-//     .then(data => {
-//         res.status(200).json({ data });
-//     })
-//     .catch(error => {
-//         res.status(500).json({ error });
-//     });
-// });
-
 // Ruta para obtener un centro deportivo específico
 centroDeportivoRoute.get('/:id', async (req, res) => {
     const { id: id_centro_deportivo } = req.params;

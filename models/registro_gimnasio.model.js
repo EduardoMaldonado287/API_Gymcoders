@@ -24,6 +24,8 @@ const allRegistroGimnasio = () => {
     return execQuery.execReadCommand(query);
 };
 
+// Función para obtener la cantidad de personas que asistieron al 
+// gimnasio en un día en un intervalo de fechas específico
 const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) => {
     const query = `
         SELECT CAST(fecha AS DATE) AS fecha, COUNT(*) AS cantidad_registros
@@ -40,6 +42,8 @@ const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) =
     return execQuery.execReadCommand(query, parameters);
 }
 
+// Función para obtener los alumnos que más asistieron al gimnasio
+// En un intevalo de fechas específico
 const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
     const query = `
         SELECT TOP 10 matricula, COUNT(*) AS cantidad_repeticiones

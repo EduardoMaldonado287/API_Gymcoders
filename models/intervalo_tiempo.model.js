@@ -1,6 +1,13 @@
 const execQuery = require('../helpers/execQuery');
 const TYPES = require('tedious').TYPES;
 
+/*
+
+    Por el momento los intervalos son constantes
+    y no se peuden editar, crear o borrar
+
+*/
+
 const addIntervaloTiempo = (intervaloTiempoData) => {
     const {
         id_intervalo,

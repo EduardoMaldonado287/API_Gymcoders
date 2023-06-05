@@ -45,6 +45,8 @@ const updateGimnasio = (gimnasioData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+// Función para actualizar el aforo del gimnasio
+// Los datos se ingresan mediante las lectursa de una cámara con ai
 const updateAforo = (gimnasioData) => {
     const {
         aforo_actual

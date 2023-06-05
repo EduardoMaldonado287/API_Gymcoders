@@ -43,19 +43,6 @@ const allInstalacion = () => {
     return execQuery.execReadCommand(query);
 };
 
-const getInstalacionImage = (id_instalacion) => {
-    const query = `
-        SELECT imagen FROM [dbo].[instalacion]
-        WHERE id_instalacion = @id_instalacion
-    `;
-
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-    ];
-
-    return execQuery.execReadCommand(query, parameters);
-};
-
 const getByIDinstalacion = (id_instalacion) => {
     const query = `
         SELECT * FROM [dbo].[instalacion]
@@ -69,6 +56,7 @@ const getByIDinstalacion = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+// Con esta función se obtiene la instalacion con su respectivo centro deportivo
 const getInstalacionWithCentroDeportivo = (id_instalacion) => {
     const query = `
     SELECT
@@ -91,23 +79,7 @@ const getInstalacionWithCentroDeportivo = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
-const getHorariosReservados = (id_instalacion, fecha) => {
-    const query = `
-        SELECT r.hora
-        FROM Reservacion r
-        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-        WHERE r.fecha = @fecha
-            AND i.id_instalacion = @id_instalacion
-    `;
-
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-        { name: 'fecha', type: TYPES.Date, value: fecha },
-    ];
-
-    return execQuery.execReadCommand(query, parameters);
-}
-
+// Obtener la cantidad de reservaciones por día en un intervalo de fechas
 const getCantidadReservacionesEnFechas = (id_instalacion, fecha_inicial, fecha_final) => {
     const query = `
         SELECT fecha, COUNT(*) AS cantidad_reservas
@@ -142,7 +114,7 @@ const updateInstalacion = (instalacionData) => {
 
     let query = ``;
 
-    // VERIFICAR LA FUNCIONALIDAD DE ESTA TABLA / update funciona
+    // Si la imgagen está indefinida no actuazliar imagen, si está definida acualizar
     if (imagen === null || imagen === undefined) {
         query = `
             UPDATE [dbo].[instalacion]
@@ -179,6 +151,7 @@ const updateInstalacion = (instalacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+// Habilitar/deshabilitar una instalacion 
 const changeState = (id_instalacion) => {
     const query = `
         UPDATE instalacion
@@ -211,10 +184,6 @@ const deleteInstalacion = (id_instalacion) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const deleteAllInstalacionImages = () => {
-
-};
-
 const getLastId = () => {
     const query = `
         SELECT MAX(id_instalacion) AS lastId
@@ -226,10 +195,8 @@ const getLastId = () => {
 module.exports = {
     addInstalacion,
     allInstalacion,
-    getInstalacionImage,
     getByIDinstalacion,
     getCantidadReservacionesEnFechas,
-    getHorariosReservados,
     getInstalacionWithCentroDeportivo,
     updateInstalacion,
     changeState,

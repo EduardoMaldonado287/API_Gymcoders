@@ -56,6 +56,7 @@ const getByIDreservacion = (id_reservacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+// Función para cambiar el estatus de una reservacion
 const cambiarEstadoReservacion = (reservacionData) => {
     const {
         id_reservacion,

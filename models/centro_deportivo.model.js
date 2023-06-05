@@ -73,16 +73,6 @@ const getDeportesInCentroDeportivo = (id_centro_deportivo) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
-// const getCentroDeportivoAndDeportes = () => {
-//     const query = `
-//         SELECT centro.*, deporte.*
-//         FROM Centro_Deportivo centro
-//         LEFT JOIN Instalacion instalacion ON centro.id_centro_deportivo = instalacion.id_centro_deportivo
-//         LEFT JOIN Deporte deporte ON instalacion.id_deporte = deporte.id_deporte;
-//     `;
-//     return execQuery.execReadCommand(query);
-// };
-
 const getInstalacionesJoinDeporteAndCentroDeportivo = (id_centro_deportivo, id_deporte) => {
     const query = `
         SELECT i.*
@@ -185,7 +175,6 @@ module.exports = {
     getByIDcentroDeportivo,
     getInstalacionesInCentroDeportivo,
     getDeportesInCentroDeportivo,
-    // getCentroDeportivoAndDeportes,
     getInstalacionesJoinDeporteAndCentroDeportivo,
     updateCentroDeportivo,
     changeState,

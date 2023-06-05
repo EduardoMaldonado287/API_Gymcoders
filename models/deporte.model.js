@@ -45,6 +45,7 @@ const updateDeporte = (deporteData) => {
         imagen_deporte,
     } = deporteData;
 
+    // Si la imagen esta definida cambiar la imagen en el query, si no ignorar ese campo
     let query = ``
     if (imagen_deporte === undefined || imagen_deporte === null) {
         console.log("no esta definido")
@@ -69,6 +70,7 @@ const updateDeporte = (deporteData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+// Función para saber si deporte tiene instalaciones vinculadas
 const tieneInstalaciones = (id_deporte) => {
     const query = `
         SELECT CASE WHEN EXISTS (
@@ -91,6 +93,7 @@ const getLastId = () => {
     return execQuery.execReadCommand(query);
 };
 
+// Eliminar un deporte, verficiar que no tenga una instalación vinculada
 const deleteDeporte = (id_deporte) => {
     const query = `
         DELETE FROM Deporte
