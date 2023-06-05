@@ -19,16 +19,18 @@ const addAlumno = (alumnoData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const allAlumno = () => {
+// Get allAlumnos
+const allAlumno = async (matricula) => {
     const query = `
-        SELECT * FROM [dbo].[Alumno]
-    `;
+     SELECT matricula from alumno
+    `
     return execQuery.execReadCommand(query);
-};
+}
+
 // Buscamos al alumno especifico
 const findAlumno = async (matricula) => {
     const query = `
-     SELECT * FROM [dbo].[ALUMNO] WHERE matricula = @matricula
+     SELECT matricula, password, nombre FROM [dbo].[ALUMNO] WHERE matricula = @matricula
     `
     const parameters = [
         { name: 'matricula', type: TYPES.VarChar, value: matricula }
@@ -38,8 +40,10 @@ const findAlumno = async (matricula) => {
 
 const getReservaciones = (matricula) => {
     const query = `
-        select * from reservacion
-        where matricula = @matricula
+        SELECT TOP 100 id_reservacion, id_estatus, matricula, fecha, hora, id_instalacion, cantidad_personas
+        FROM reservacion
+        WHERE matricula = @matricula AND fecha >= DATEADD(MONTH, -5, GETDATE())
+        ORDER BY fecha DESC, hora DESC;
     `;
     const parameters = [
         { name: 'matricula', type: TYPES.VarChar, value: matricula }

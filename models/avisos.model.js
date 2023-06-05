@@ -29,9 +29,23 @@ const addAvisos = (avisosData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const allAvisos = () => {
+// Todos los avisos desdes vista administrador
+const allAvisosAdministrador = () => {
     const query = `
-        SELECT * FROM [dbo].[avisos]
+        SELECT TOP 200 *
+        FROM avisos
+        ORDER BY Avisos.fecha_publicacion DESC;
+    `;
+    return execQuery.execReadCommand(query);
+};
+
+// Todos los avisos desde vista alumno (filtrado por fechas)
+const allAvisosAlumno = () => {
+    const query = `
+        SELECT TOP 50 *
+        FROM avisos
+        WHERE Avisos.fecha_inicio <= GETDATE() AND Avisos.fecha_fin >= GETDATE()
+        ORDER BY Avisos.fecha_publicacion DESC;
     `;
     return execQuery.execReadCommand(query);
 };
@@ -108,7 +122,8 @@ const getLastId = () => {
 
 module.exports = {
     addAvisos,
-    allAvisos,
+    allAvisosAdministrador,
+    allAvisosAlumno,
     updateAvisos,
     deleteAvisos,
     getLastId,

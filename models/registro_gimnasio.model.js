@@ -19,7 +19,9 @@ const addRegistroGimnasio = (registroGimnasioData) => {
 
 const allRegistroGimnasio = () => {
     const query = `
-        SELECT * FROM [dbo].[registro_gimnasio]
+        SELECT *
+        FROM Registro_Gimnasio
+        WHERE CAST(fecha AS DATE) = CAST(GETDATE() AS DATE);
     `;
     return execQuery.execReadCommand(query);
 };

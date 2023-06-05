@@ -57,9 +57,20 @@ avisosRoute.post('/num_nomina/:id_nomina', uploadStrategy, async (req, res) => {
         }
     });
 
+// Ruta para obtener todos los avisos desde un administrador
+avisosRoute.get('/administrador', async(req, res) => {
+    avisosModel.allAvisosAdministrador()
+    .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
+
 // Ruta para obtener todos los avisos
-avisosRoute.get('/', async(req, res) => {
-    avisosModel.allAvisos()
+avisosRoute.get('/alumno', async(req, res) => {
+    avisosModel.allAvisosAlumno()
     .then(data => {
             res.status(200).json({ data });
         })

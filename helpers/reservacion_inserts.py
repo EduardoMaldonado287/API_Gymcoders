@@ -1,4 +1,5 @@
 """
+
     Archivo para insertar datos en la tabla reservacion
     de manera automatica tomando en cuenta los alumnos
     y las instalaciones existentes
@@ -33,7 +34,7 @@ while fecha_actual <= ultima_fecha:
     fecha_actual += timedelta(days=1)
 
 # Calcular horas disponibles
-rango_horas = [str(x) + ":00:00" for x in range(8, 21)]
+rango_horas = [str(x) + ":00:00" for x in range(8, 20)]
 
 
 if response1.status_code == 200 and response2.status_code == 200:
@@ -57,5 +58,8 @@ if response1.status_code == 200 and response2.status_code == 200:
     print("INSERT INTO Reservacion (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora)")
     print("VALUES")
     for i in range(init, maxn ):
-        print("(" + str(i) + ", " + str(random.choice(id_instalaciones)) + ", 1, '" + random.choice(matriculas) + "', '" + str(random.choice(rango_fechas)) + "', '" + str(random.choice(rango_horas)) + "'),")
+        insertString = ("(" + str(i) + ", " + str(random.choice(id_instalaciones)) + ", 1, '" + random.choice(matriculas) + "', '" + str(random.choice(rango_fechas)) + "', '" + str(random.choice(rango_horas)) + "'),")
     print("(" + str(maxn) + ", " + str(random.choice(id_instalaciones)) + ", 1, '" + random.choice(matriculas) + "', '" + str(random.choice(rango_fechas)) + "', '" + str(random.choice(rango_horas)) + "');")
+
+else: 
+    print("Error de la base de datos")

@@ -38,7 +38,8 @@ const addReservacion = (reservacionData) => {
 
 const allReservacion = () => {
     const query = `
-        SELECT * FROM [dbo].[reservacion]
+        SELECT TOP 500 * FROM [dbo].[reservacion]
+        ORDER BY Reservacion.id_reservacion  DESC
     `;
     return execQuery.execReadCommand(query);
 };

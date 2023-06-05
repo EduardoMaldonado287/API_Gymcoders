@@ -21,13 +21,6 @@ const addCalificacionInstalacion = (calificacionInstalacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const allCalificacionInstalacion = () => {
-    const query = `
-        SELECT * FROM [dbo].[calificacion_instalacion]
-    `;
-    return execQuery.execReadCommand(query);
-};
-
 // Obtener las respectivas calificacoines de una instalación
 const getCalificaciones = (id_instalacion) => {
     const query = `
@@ -91,7 +84,6 @@ const getLastId = () => {
 
 module.exports = {
     addCalificacionInstalacion,
-    allCalificacionInstalacion,
     getCalificaciones,
     getCantidadEstrellas,
     getCalificacionPromedio,

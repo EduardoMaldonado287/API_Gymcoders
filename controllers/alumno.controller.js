@@ -52,6 +52,17 @@ alumnoRoute.post("/login", async (req, res) => {
     // res.send(verifyJWT(accessTkn))
 })
 
+// Ruta para obtener todos los alumnos
+alumnoRoute.get('/', async (req, res) => {
+    alumnoModel.allAlumno()
+        .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
 // Ruta para obtener las reservaciones de un alumno
 alumnoRoute.get('/:id/reservaciones', async (req, res) => {
     const { id: matricula } = req.params;
