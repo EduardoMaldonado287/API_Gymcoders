@@ -53,20 +53,17 @@ alumnoRoute.post("/login", async (req, res) => {
     if (matricula != alumno[0].matricula || password != alumno[0].password) {
         res.status(401).send("usuario no identificado")
     }
-<<<<<<< HEAD
  
     const accessTkn = signJWT({matricula:matricula,password:password},{expiresIn:'1d'});
     const refreshTkn = refresh({matricula:matricula,password:password},{expiresIn:'1d'});
     res.cookie('jwt',refreshTkn,{
         maxAge:24*60*60*100,
         httpOnly:true,
-=======
 
     const accessTkn = signJWT({ matricula: matricula, password: password }, { expiresIn: '1d' });
     res.cookie('accestoken', accessTkn, {
         maxAge: 3000,
         httpOnly: true,
->>>>>>> refs/remotes/api_gym/main
     })
     console.log(refresh)
     res.send(accessTkn)
