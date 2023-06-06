@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const getConnection = require('./helpers/database.js');
 const bodyParser = require('body-parser');
 const path = require('path')
+const verifyJWT = require('./middlelwares/verifyJWT')
 // juan
 const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
 const alumnoController = require('./controllers/alumno.controller.js');
@@ -74,6 +75,8 @@ app.use('/gimnasio', gimnasioController);
 app.use('/deporte', deporteController);
 
 app.use('/test', testController);
+
+
 
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);

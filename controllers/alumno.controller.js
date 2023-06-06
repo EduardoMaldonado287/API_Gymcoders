@@ -1,7 +1,8 @@
 const alumnoRoute = require('express').Router();
 const alumnoModel = require('../models/alumno.model');
-const {verifyJWT,signJWT} = require('../services/alumno.services')
+const {refresh,signJWT} = require('../services/alumno.services')
 const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
+const verifyJWT = require('../middlelwares/verifyJWT');
 
 alumnoRoute.post('/', async (req, res) => {
     const {
@@ -28,6 +29,7 @@ alumnoRoute.post('/', async (req, res) => {
     });
 });
 // Hacer Login
+// 
 alumnoRoute.post("/login",async(req,res)=>{
     // PREGUNTARLE A EDUARDO COMO LLAMA A UN ALUMNO
     const {matricula,password} = req.body
@@ -42,14 +44,18 @@ alumnoRoute.post("/login",async(req,res)=>{
     }
  
     const accessTkn = signJWT({matricula:matricula,password:password},{expiresIn:'1d'});
-    res.cookie('accestoken',accessTkn,{
-        maxAge:3000,
+    const refreshTkn = refresh({matricula:matricula,password:password},{expiresIn:'1d'});
+    res.cookie('jwt',refreshTkn,{
+        maxAge:24*60*60*100,
         httpOnly:true,
     })
-    res.send("Usuario Logeado")
+    console.log(refresh)
+    res.send(accessTkn)
     // res.send(verifyJWT(accessTkn))
 })
 
+
+// ADMIN
 alumnoRoute.get('/', async(req, res) => {
     alumnoModel.allAlumno()
     .then(data => {
@@ -59,8 +65,8 @@ alumnoRoute.get('/', async(req, res) => {
         res.status(500).json({ error });
     });
 });
-
-alumnoRoute.get('/:id/reservaciones', async(req, res) => {
+// Usuario
+alumnoRoute.get('/:id/reservaciones',verifyJWT, async(req, res) => {
     const {id: matricula} = req.params;
     alumnoModel.getReservaciones(matricula)
     .then(data => {
@@ -70,8 +76,8 @@ alumnoRoute.get('/:id/reservaciones', async(req, res) => {
         res.status(500).json({ error });
     });
 });
-
-alumnoRoute.put('/:id', uploadStrategy, async (req, res) => {
+// Usuaio
+alumnoRoute.put('/:id', uploadStrategy,verifyJWT, async (req, res) => {
     const blobName = getBlobName(req.file.originalname);
     if (addImage(blobName, req.file.buffer, req.file.buffer.length) == true)
     {
@@ -96,7 +102,7 @@ alumnoRoute.put('/:id', uploadStrategy, async (req, res) => {
         })
     }
 });
-
+// Admin
 alumnoRoute.delete('/:id', async (req, res) => {
     const {id: matricula} = req.params;
     alumnoModel.deleteAlumno(matricula)
@@ -107,7 +113,7 @@ alumnoRoute.delete('/:id', async (req, res) => {
         res.status(500).json({ error });
     })
 });
-
+// Admin
 alumnoRoute.delete('/:id', async (req, res) => {
     const {id: matricula} = req.params;
     alumnoModel.deleteAlumno(matricula)
