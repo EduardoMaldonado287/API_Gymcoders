@@ -23,6 +23,7 @@ dotenv.config();  // Configura las variables de entorno definidas en el archivo 
 app.use(cors());  // Habilita el middleware de CORS para permitir solicitudes de diferentes dominios
 app.use(express.json());  // Middleware para analizar el cuerpo de la solicitud como JSON
 app.use(express.urlencoded({ extended: true }));  // Middleware para analizar el cuerpo de la solicitud codificado en URL
+const {getConnection} =require("./helpers/database")
 
 const { API_PORT, SERVER_TAG } = process.env;  // Obtiene el puerto y la etiqueta del servidor de las variables de entorno
 
@@ -55,7 +56,7 @@ app.use('/registro_gimnasio', registroGimnasioController);
 app.use('/gimnasio', gimnasioController);
 app.use('/deporte', deporteController);
 
-app.use('/test', testController);
+// app.use('/test', testController); 
 
 
 
