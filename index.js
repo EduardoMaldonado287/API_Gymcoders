@@ -3,16 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
-<<<<<<< HEAD
 const path = require('path')
 const verifyJWT = require('./middlelwares/verifyJWT')
 // juan
-=======
-const path = require('path');
-const { getConnection } = require('./helpers/database.js');
-
-// Importa los controladores
->>>>>>> refs/remotes/api_gym/main
 const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
 const alumnoController = require('./controllers/alumno.controller.js');
 const administradorController = require('./controllers/administrador.controller.js');
@@ -62,14 +55,10 @@ app.use('/registro_gimnasio', registroGimnasioController);
 app.use('/gimnasio', gimnasioController);
 app.use('/deporte', deporteController);
 
-<<<<<<< HEAD
 app.use('/test', testController);
 
 
 
-=======
-// Inicia el servidor y escucha en el puerto especificado
->>>>>>> refs/remotes/api_gym/main
 app.listen(API_PORT, () => {
     console.log(`API running on PORT ${API_PORT}`);
 });
