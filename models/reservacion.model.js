@@ -8,6 +8,7 @@ const addReservacion = (reservacionData) => {
         matricula,
         fecha,
         hora,
+        duracion_reservacion,
         cantidad_personas
     } = reservacionData;
     const query = `
@@ -21,8 +22,8 @@ const addReservacion = (reservacionData) => {
         )
             THROW 50000, 'El alumno ya tiene una reserva en la instalación en el día especificado.', 1;
         ELSE
-            INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, cantidad_personas)
-                VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @cantidad_personas)
+            INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, duracion, cantidad_personas)
+                VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @duracion_reservacion, @cantidad_personas)
 
     `;
     const parameters = [
@@ -31,6 +32,7 @@ const addReservacion = (reservacionData) => {
         { name: 'matricula', type: TYPES.VarChar, value: matricula },
         { name: 'fecha', type: TYPES.Date, value: fecha },
         { name: 'hora', type: TYPES.VarChar, value: hora },
+        { name: 'duracion_reservacion', type: TYPES.Time, value: duracion_reservacion },
         { name: 'cantidad_personas', type: TYPES.Int, value: cantidad_personas },
     ];
     return execQuery.execWriteCommand(query, parameters);
@@ -57,6 +59,21 @@ const getByIDreservacion = (id_reservacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+const getDuracionReservacion = (id_instalacion) => {
+    const query = `
+        SELECT CONVERT(TIME, DATEADD(MINUTE, it.tiempo, '00:00:00')) AS duracion
+        FROM Instalacion i
+        JOIN Intervalo_Tiempo it ON i.id_intervalo = it.id_intervalo
+        where id_instalacion = @id_instalacion
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+};
+
 // Función para cambiar el estatus de una reservacion
 const cambiarEstadoReservacion = (reservacionData) => {
     const {
@@ -75,17 +92,6 @@ const cambiarEstadoReservacion = (reservacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const deleteReservacion = (id_reservacion) => {
-    const query = `
-        DELETE FROM [dbo].[reservacion]
-        WHERE id_reservacion= @id_reservacion
-    `;
-    const parameters = [
-        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion }
-    ];
-    return execQuery.execWriteCommand(query, parameters);
-};
-
 const getLastId = () => {
     const query = `
         SELECT MAX(id_reservacion) AS lastId
@@ -98,7 +104,7 @@ module.exports = {
     addReservacion,
     allReservacion,
     getByIDreservacion,
+    getDuracionReservacion,
     cambiarEstadoReservacion,
-    deleteReservacion,
     getLastId,
 };

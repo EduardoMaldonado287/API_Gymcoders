@@ -18,6 +18,11 @@ reservacionRoute.post('/matricula/:id/instalacion/:id_instalacion', async (req, 
             cantidad_personas
         } = req.body;
 
+        // Obtener la duración de la reservación
+        const getDuracionReservacion = await reservacionModel.getDuracionReservacion(id_instalacion)
+        const duracion_reservacion = getDuracionReservacion[0].duracion
+        console.log(duracion_reservacion)
+
         // Llama a la función addReservacion del modelo de Reservacion
         await reservacionModel.addReservacion({
             id_reservacion,
@@ -25,6 +30,7 @@ reservacionRoute.post('/matricula/:id/instalacion/:id_instalacion', async (req, 
             matricula,
             fecha,
             hora,
+            duracion_reservacion,
             cantidad_personas
         })
             .then((rowCount, more) => {

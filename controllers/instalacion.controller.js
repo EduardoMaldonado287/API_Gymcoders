@@ -220,7 +220,7 @@ instalacionRoute.put('/:id/cambiar_estado', async (req, res) => {
 });
 
 // Ruta para eliminar una instalacion
-instalacionRoute.delete('/', async (req, res) => {
+instalacionRoute.delete('/:id', async (req, res) => {
     const { id: id_instalacion } = req.params;
 
     // Eliminar la imagen de azure-storage
