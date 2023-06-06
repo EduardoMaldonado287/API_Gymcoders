@@ -11,19 +11,23 @@ const addRegistroGimnasio = (registroGimnasioData) => {
         VALUES (@fecha, @matricula)
     `;
     const parameters = [
-        {name: 'fecha', type: TYPES.VarChar, value: fecha},
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
+        { name: 'fecha', type: TYPES.VarChar, value: fecha },
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
 
 const allRegistroGimnasio = () => {
     const query = `
-        SELECT * FROM [dbo].[registro_gimnasio]
+        SELECT *
+        FROM Registro_Gimnasio
+        WHERE CAST(fecha AS DATE) = CAST(GETDATE() AS DATE);
     `;
     return execQuery.execReadCommand(query);
 };
 
+// Función para obtener la cantidad de personas que asistieron al 
+// gimnasio en un día en un intervalo de fechas específico
 const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) => {
     const query = `
         SELECT CAST(fecha AS DATE) AS fecha, COUNT(*) AS cantidad_registros
@@ -34,12 +38,14 @@ const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) =
     `;
 
     const parameters = [
-        {name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial},
-        {name: 'fecha_final', type: TYPES.DateTime, value: fecha_final},
+        { name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.DateTime, value: fecha_final },
     ];
     return execQuery.execReadCommand(query, parameters);
 }
 
+// Función para obtener los alumnos que más asistieron al gimnasio
+// En un intevalo de fechas específico
 const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
     const query = `
         SELECT TOP 10 matricula, COUNT(*) AS cantidad_repeticiones
@@ -50,8 +56,8 @@ const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
     `;
 
     const parameters = [
-        {name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial},
-        {name: 'fecha_final', type: TYPES.DateTime, value: fecha_final},
+        { name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.DateTime, value: fecha_final },
     ];
     return execQuery.execReadCommand(query, parameters);
 }

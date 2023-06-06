@@ -8,26 +8,23 @@ const addInstalacion = (instalacionData) => {
         nombre,
         id_deporte,
         imagen,
+        id_intervalo,
         hora_inicial_es,
         hora_final_es,
         hora_inicial_fds,
         hora_final_fds
     } = instalacionData;
-   
-    for (const prop in instalacionData) {
-        if (instalacionData.hasOwnProperty(prop)) {
-            console.log(prop + ':', instalacionData[prop]);
-        }
-    } 
+
     const query = `
     INSERT INTO [dbo].[instalacion] (id_instalacion, id_centro_deportivo, id_intervalo, 
         nombre, id_deporte, imagen, hora_inicial_es, hora_final_es, hora_inicial_fds, hora_final_fds, esta_habilitada)
-    VALUES (@id_instalacion, @id_centro_deportivo, 1, @nombre, 
+    VALUES (@id_instalacion, @id_centro_deportivo, @id_intervalo, @nombre, 
         @id_deporte, @imagen, @hora_inicial_es, @hora_final_es, @hora_inicial_fds, @hora_final_fds, 1)
     `;
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
@@ -59,6 +56,7 @@ const getByIDinstalacion = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
+// Con esta función se obtiene la instalacion con su respectivo centro deportivo
 const getInstalacionWithCentroDeportivo = (id_instalacion) => {
     const query = `
     SELECT
@@ -81,58 +79,20 @@ const getInstalacionWithCentroDeportivo = (id_instalacion) => {
     return execQuery.execReadCommand(query, parameters);
 };
 
-const getHorariosDisponibles = (id_instalacion, fecha) => {
+// Obtener la cantidad de reservaciones por día en un intervalo de fechas
+const getCantidadReservacionesEnFechas = (id_instalacion, fecha_inicial, fecha_final) => {
     const query = `
-        SELECT lh.hora
-        FROM Lista_horas lh
-        LEFT JOIN (
-            SELECT r.hora
-            FROM Reservacion r
-            JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-            WHERE r.fecha = '2023-05-25'
-            AND i.id_instalacion = 1
-        ) AS reservas ON lh.hora = reservas.hora
-        WHERE lh.hora >= '08:00:00'
-        AND lh.hora <= '20:00:00'
-        AND reservas.hora IS NULL;
+        SELECT fecha, COUNT(*) AS cantidad_reservas
+        FROM Reservacion
+        WHERE id_instalacion = @id_instalacion
+        AND fecha BETWEEN @fecha_inicial AND @fecha_final
+        GROUP BY fecha;
     `;
 
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-        { name: 'fecha', type: TYPES.Date, value: fecha },
-    ];
-
-    return execQuery.execReadCommand(query, parameters);
-};
-
-const getHorariosReservados = (id_instalacion, fecha) => {
-    const query = `
-        SELECT r.hora
-        FROM Reservacion r
-        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-        WHERE r.fecha = @fecha
-            AND i.id_instalacion = @id_instalacion
-    `;
-
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
-        { name: 'fecha', type: TYPES.Date, value: fecha },
-    ];
-
-    return execQuery.execReadCommand(query, parameters);
-}
-
-const getCalificaciones = (id_instalacion) => {
-    const query = `
-        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios
-        FROM Calificacion_Instalacion ci
-        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
-        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
-        WHERE i.id_instalacion = @id_instalacion;
-    `;
-
-    const parameters = [
-        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+        { name: 'fecha_inicial', type: TYPES.Date, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.Date, value: fecha_final },
     ];
 
     return execQuery.execReadCommand(query, parameters);
@@ -142,6 +102,7 @@ const updateInstalacion = (instalacionData) => {
     const {
         id_instalacion,
         id_centro_deportivo,
+        id_intervalo,
         nombre,
         id_deporte,
         imagen,
@@ -152,13 +113,13 @@ const updateInstalacion = (instalacionData) => {
     } = instalacionData;
 
     let query = ``;
-    
-    // VERIFICAR LA FUNCIONALIDAD DE ESTA TABLA / update funciona
-    if (imagen === null || imagen === undefined){
+
+    // Si la imgagen está indefinida no actuazliar imagen, si está definida acualizar
+    if (imagen === null || imagen === undefined) {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo, 
-            nombre = @nombre, id_deporte = @id_deporte,
+            nombre = @nombre, id_deporte = @id_deporte, id_intervalo = @id_intervalo,
             hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
             hora_final_fds = @hora_final_fds
             WHERE id_instalacion = @id_instalacion
@@ -167,17 +128,17 @@ const updateInstalacion = (instalacionData) => {
         query = `
             UPDATE [dbo].[instalacion]
             SET id_centro_deportivo = @id_centro_deportivo,
-            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen,
+            nombre = @nombre, id_deporte = @id_deporte, imagen = @imagen, @id_intervalo = @id_intervalo,
             hora_inicial_es = @hora_inicial_es, hora_final_es = @hora_final_es, hora_inicial_fds = @hora_inicial_fds,
             hora_final_fds = @hora_final_fds
             WHERE id_instalacion = @id_instalacion
         `;
     }
 
-
     const parameters = [
         { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
         { name: 'id_centro_deportivo', type: TYPES.VarChar, value: id_centro_deportivo },
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
         { name: 'nombre', type: TYPES.VarChar, value: nombre },
         { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
         { name: 'imagen', type: TYPES.VarChar, value: imagen },
@@ -190,6 +151,7 @@ const updateInstalacion = (instalacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+// Habilitar/deshabilitar una instalacion 
 const changeState = (id_instalacion) => {
     const query = `
         UPDATE instalacion
@@ -197,16 +159,13 @@ const changeState = (id_instalacion) => {
         WHERE id_instalacion = @id_instalacion;
     `;
     const parameters = [
-        {name: 'id_instalacion', type: TYPES.Int, value: id_instalacion},
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
 
 const deleteInstalacion = (id_instalacion) => {
     const query = `
-        DELETE FROM Participantes
-        WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion = @id_instalacion);
-        
         -- Eliminar registros de reservaciones relacionadas
         DELETE FROM Reservacion
         WHERE id_instalacion = @id_instalacion;
@@ -233,15 +192,11 @@ const getLastId = () => {
     return execQuery.execReadCommand(query);
 };
 
-
-
 module.exports = {
     addInstalacion,
     allInstalacion,
     getByIDinstalacion,
-    getHorariosDisponibles,
-    getHorariosReservados,
-    getCalificaciones,
+    getCantidadReservacionesEnFechas,
     getInstalacionWithCentroDeportivo,
     updateInstalacion,
     changeState,

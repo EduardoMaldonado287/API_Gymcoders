@@ -9,17 +9,17 @@ const addCentroDeportivo = (centroDeportivoData) => {
         ubicacion,
         esta_habilitado
     } = centroDeportivoData;
-    
+
     const query = `
         INSERT INTO [dbo].[centro_deportivo] (id_centro_deportivo, nombre, imagen, ubicacion, esta_habilitado)
         VALUES (@id_centro_deportivo, @nombre, @imagen, @ubicacion, @esta_habilitado)
     `;
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
-        {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'ubicacion', type: TYPES.VarChar, value: ubicacion},
-        {name: 'esta_habilitado', type: TYPES.Bit, value: esta_habilitado},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
+        { name: 'imagen', type: TYPES.VarChar, value: imagen },
+        { name: 'ubicacion', type: TYPES.VarChar, value: ubicacion },
+        { name: 'esta_habilitado', type: TYPES.Bit, value: esta_habilitado },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -38,7 +38,7 @@ const getByIDcentroDeportivo = (id_centro_deportivo) => {
     `;
 
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
     ];
 
     return execQuery.execReadCommand(query, parameters);
@@ -51,7 +51,7 @@ const getInstalacionesInCentroDeportivo = (id_centro_deportivo) => {
     `;
 
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
     ];
 
     return execQuery.execReadCommand(query, parameters);
@@ -67,20 +67,10 @@ const getDeportesInCentroDeportivo = (id_centro_deportivo) => {
     `;
 
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
     ];
 
     return execQuery.execReadCommand(query, parameters);
-};
-
-const getCentroDeportivoAndDeportes = () => {
-    const query = `
-        SELECT centro.*, deporte.*
-        FROM Centro_Deportivo centro
-        LEFT JOIN Instalacion instalacion ON centro.id_centro_deportivo = instalacion.id_centro_deportivo
-        LEFT JOIN Deporte deporte ON instalacion.id_deporte = deporte.id_deporte;
-    `;
-    return execQuery.execReadCommand(query);
 };
 
 const getInstalacionesJoinDeporteAndCentroDeportivo = (id_centro_deportivo, id_deporte) => {
@@ -93,8 +83,8 @@ const getInstalacionesJoinDeporteAndCentroDeportivo = (id_centro_deportivo, id_d
     `;
 
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
-        {name: 'id_deporte', type: TYPES.Int, value: id_deporte},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
+        { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
     ];
     return execQuery.execReadCommand(query, parameters);
 };
@@ -109,7 +99,7 @@ const updateCentroDeportivo = (centroDeportivoData) => {
     } = centroDeportivoData;
 
     let query = ``
-    if (imagen === null || imagen === undefined){
+    if (imagen === null || imagen === undefined) {
         query = `
             UPDATE [dbo].[centro_deportivo]
             SET nombre = @nombre, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado
@@ -120,15 +110,15 @@ const updateCentroDeportivo = (centroDeportivoData) => {
             UPDATE [dbo].[centro_deportivo]
             SET nombre = @nombre, imagen = @imagen, ubicacion = @ubicacion, esta_habilitado = @esta_habilitado
             WHERE id_centro_deportivo = @id_centro_deportivo
-        `;  
+        `;
     }
 
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
-        {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'ubicacion', type: TYPES.VarChar, value: ubicacion},
-        {name: 'esta_habilitado', type: TYPES.Bit, value: esta_habilitado},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
+        { name: 'imagen', type: TYPES.VarChar, value: imagen },
+        { name: 'ubicacion', type: TYPES.VarChar, value: ubicacion },
+        { name: 'esta_habilitado', type: TYPES.Bit, value: esta_habilitado },
 
     ];
     return execQuery.execWriteCommand(query, parameters);
@@ -141,17 +131,13 @@ const changeState = (id_centro_deportivo) => {
         WHERE id_centro_deportivo = @id_centro_deportivo;
     `;
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo},
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
 
 const deleteCentroDeportivo = (id_centro_deportivo) => {
-    const query = `
-    -- Eliminar los participantes de las reservaciones relacionadas
-    DELETE FROM Participantes
-    WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));
-    
+    const query = `    
     -- Eliminar las calificaciones de las reservaciones relacionadas
     DELETE FROM Calificacion_Instalacion
     WHERE id_reservacion IN (SELECT id_reservacion FROM Reservacion WHERE id_instalacion IN (SELECT id_instalacion FROM Instalacion WHERE id_centro_deportivo = @id_centro_deportivo));
@@ -170,7 +156,7 @@ const deleteCentroDeportivo = (id_centro_deportivo) => {
 
     `;
     const parameters = [
-        {name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo}
+        { name: 'id_centro_deportivo', type: TYPES.Int, value: id_centro_deportivo }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -189,7 +175,6 @@ module.exports = {
     getByIDcentroDeportivo,
     getInstalacionesInCentroDeportivo,
     getDeportesInCentroDeportivo,
-    getCentroDeportivoAndDeportes,
     getInstalacionesJoinDeporteAndCentroDeportivo,
     updateCentroDeportivo,
     changeState,

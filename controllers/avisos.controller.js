@@ -1,30 +1,25 @@
 const avisosRoute = require('express').Router();
 const avisosModel = require('../models/avisos.model');
-const { addImage, uploadStrategy, config, getBlobName, containerName} = require('../helpers/imageConfig');
+const { addImage, uploadStrategy, deleteImage, config, getBlobName, containerName} = require('../helpers/imageConfig');
 
+// Ruta para agregar un nuevo aviso, se necesita de un num_nomina (tabla administrador) existente para funcionar
 avisosRoute.post('/num_nomina/:id_nomina', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-    
     try {
         var imagen;
-        if (hasImageFile() == true){
+        // Si existe una imagen se agrega a azure storage y se guarda su respectivo link
+        if (req.file){
             const blobName = getBlobName(req.file.originalname);
             imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
             addImage(blobName, req.file.buffer, req.file.buffer.length);
         }
 
+        // Obtener el ultimo id
         const lastIdResult = await avisosModel.getLastId();
         const lastId = lastIdResult[0].lastId;
         const id_aviso = lastId + 1;
-        const {id_nomina: num_nomina} = req.params;
 
+        // Extraer los datos de la solicitud 
+        const {id_nomina: num_nomina} = req.params;
         const {
             titulo,
             contenido,
@@ -32,6 +27,8 @@ avisosRoute.post('/num_nomina/:id_nomina', uploadStrategy, async (req, res) => {
             fecha_inicio,
             fecha_fin
         } = req.body;
+
+        // Llama a la función addAvisos del modelo de administrador
         await avisosModel.addAvisos({
             id_aviso,
             num_nomina,
@@ -60,8 +57,9 @@ avisosRoute.post('/num_nomina/:id_nomina', uploadStrategy, async (req, res) => {
         }
     });
 
-avisosRoute.get('/', async(req, res) => {
-    avisosModel.allAvisos()
+// Ruta para obtener todos los avisos desde un administrador
+avisosRoute.get('/administrador', async(req, res) => {
+    avisosModel.allAvisosAdministrador()
     .then(data => {
             res.status(200).json({ data });
         })
@@ -70,24 +68,35 @@ avisosRoute.get('/', async(req, res) => {
         });
     });
 
-avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
-    function hasImageFile(){
-        try{
-            const testVar = getBlobName(req.file.originalname);
-            return true;
-        } catch {
-            return false;
-        }
-    }
+// Ruta para obtener todos los avisos
+avisosRoute.get('/alumno', async(req, res) => {
+    avisosModel.allAvisosAlumno()
+    .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+    });
 
-    var imagen;
-    if (hasImageFile() == true){
-        const blobName = getBlobName(req.file.originalname);
+// Ruta para editar un aviso
+avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
+    let imagen;
+    const {id: id_aviso} = req.params;
+
+    // Si se adjunta un archivo subirlo a azure storage y eliminar el archivo anterior
+    if (req.file){
+        let blobName = getBlobName(req.file.originalname);
         imagen = `https://${config.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`
         addImage(blobName, req.file.buffer, req.file.buffer.length);
+
+        const avisoInfo = await avisosModel.getByIDAviso(id_aviso);
+        const imageUrl = avisoInfo[0].imagen
+        blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+        deleteImage(blobName)
     }
 
-    const {id: id_aviso} = req.params;
+    // Extraer los datos de la solicitud 
     const {
             titulo,
             contenido,
@@ -95,6 +104,8 @@ avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
             fecha_inicio,
             fecha_fin
     } = req.body;
+
+    // Llama a la función updateAviso del modelo de Aviso
     avisosModel.updateAvisos({
             id_aviso,
             titulo,
@@ -118,8 +129,17 @@ avisosRoute.put('/:id', uploadStrategy, async (req, res) => {
         });
     });
 
+// Ruta para eliminar un aviso
 avisosRoute.delete('/:id', async (req, res) => {
     const {id: id_aviso} = req.params;
+
+    // Se elimina la imagen en azure storage
+    const avisoInfo = await avisosModel.getByIDAviso(id_aviso);
+    const imageUrl = avisoInfo[0].imagen
+    const blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    deleteImage(blobName)
+
+    // Llama a la función deleteAvisos del modelo de avisos
     avisosModel.deleteAvisos(id_aviso)
     .then((rowCount, more) => {
             res.status(200).json({ rowCount, more });

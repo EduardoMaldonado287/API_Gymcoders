@@ -12,9 +12,9 @@ const addDeporte = (deporteData) => {
         VALUES (@id_deporte, @nombre_deporte, @imagen_deporte)
     `;
     const parameters = [
-        {name: 'id_deporte', type: TYPES.Int, value: id_deporte},
-        {name: 'nombre_deporte', type: TYPES.VarChar, value: nombre_deporte},
-        {name: 'imagen_deporte', type: TYPES.VarChar, value: imagen_deporte},
+        { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
+        { name: 'nombre_deporte', type: TYPES.VarChar, value: nombre_deporte },
+        { name: 'imagen_deporte', type: TYPES.VarChar, value: imagen_deporte },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -26,6 +26,18 @@ const allDeporte = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getByIDdeporte = (id_deporte) => {
+    const query = `
+        select * from deporte 
+        where id_deporte = @id_deporte
+    `;
+    const parameters = [
+        { name: 'id_deporte', type: TYPES.Int, value: id_deporte }
+    ];
+    return execQuery.execReadCommand(query, parameters);
+};
+
+
 const updateDeporte = (deporteData) => {
     const {
         id_deporte,
@@ -33,9 +45,9 @@ const updateDeporte = (deporteData) => {
         imagen_deporte,
     } = deporteData;
 
+    // Si la imagen esta definida cambiar la imagen en el query, si no ignorar ese campo
     let query = ``
-    if (imagen_deporte === undefined || imagen_deporte === null)
-    {
+    if (imagen_deporte === undefined || imagen_deporte === null) {
         console.log("no esta definido")
         query = `
             UPDATE [dbo].[deporte]
@@ -51,29 +63,14 @@ const updateDeporte = (deporteData) => {
     }
 
     const parameters = [
-        {name: 'id_deporte', type: TYPES.Int, value: id_deporte},
-        {name: 'nombre_deporte', type: TYPES.VarChar, value: nombre_deporte},
-        {name: 'imagen_deporte', type: TYPES.VarChar, value: imagen_deporte},
+        { name: 'id_deporte', type: TYPES.Int, value: id_deporte },
+        { name: 'nombre_deporte', type: TYPES.VarChar, value: nombre_deporte },
+        { name: 'imagen_deporte', type: TYPES.VarChar, value: imagen_deporte },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const deleteDeporte = (id_deporte) => {
-    const query = `
-        DELETE FROM Deporte
-        WHERE id_deporte = @id_deporte
-        AND id_deporte NOT IN (
-            SELECT id_deporte
-            FROM Instalacion
-        );
-
-    `;
-    const parameters = [
-        {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
-    ];
-    return execQuery.execWriteCommand(query, parameters);
-};
-
+// Función para saber si deporte tiene instalaciones vinculadas
 const tieneInstalaciones = (id_deporte) => {
     const query = `
         SELECT CASE WHEN EXISTS (
@@ -83,7 +80,7 @@ const tieneInstalaciones = (id_deporte) => {
         ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS tiene_instalaciones
     `;
     const parameters = [
-        {name: 'id_deporte', type: TYPES.Int, value: id_deporte}
+        { name: 'id_deporte', type: TYPES.Int, value: id_deporte }
     ];
     return execQuery.execReadCommand(query, parameters);
 }
@@ -96,10 +93,28 @@ const getLastId = () => {
     return execQuery.execReadCommand(query);
 };
 
+// Eliminar un deporte, verficiar que no tenga una instalación vinculada
+const deleteDeporte = (id_deporte) => {
+    const query = `
+        DELETE FROM Deporte
+        WHERE id_deporte = @id_deporte
+        AND id_deporte NOT IN (
+            SELECT id_deporte
+            FROM Instalacion
+        );
+
+    `;
+    const parameters = [
+        { name: 'id_deporte', type: TYPES.Int, value: id_deporte }
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
 module.exports = {
     addDeporte,
     allDeporte,
     updateDeporte,
+    getByIDdeporte,
     deleteDeporte,
     tieneInstalaciones,
     getLastId,

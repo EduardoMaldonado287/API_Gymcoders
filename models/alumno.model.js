@@ -4,7 +4,7 @@ const TYPES = require('tedious').TYPES;
 const addAlumno = (alumnoData) => {
     const {
         matricula,
-        password, 
+        password,
     } = alumnoData;
 
     const query = `
@@ -12,40 +12,44 @@ const addAlumno = (alumnoData) => {
         VALUES (@matricula, @password, @nombre)
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'password', type: TYPES.VarChar, value: password},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
+        { name: 'password', type: TYPES.VarChar, value: password },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const allAlumno = () => {
+// Get allAlumnos
+const allAlumno = async (matricula) => {
     const query = `
-        SELECT * FROM [dbo].[Alumno]
-    `;
+     SELECT matricula from alumno
+    `
     return execQuery.execReadCommand(query);
-}; 
+}
+
 // Buscamos al alumno especifico
-const  findAlumno = async (matricula) =>{
+const findAlumno = async (matricula) => {
     const query = `
-     SELECT * FROM [dbo].[ALUMNO] WHERE matricula = @matricula
+     SELECT matricula, password, nombre FROM [dbo].[ALUMNO] WHERE matricula = @matricula
     `
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
     ];
-    return execQuery.execReadCommand(query,parameters);
+    return execQuery.execReadCommand(query, parameters);
 }
 
 const getReservaciones = (matricula) => {
     const query = `
-        select * from reservacion
-        where matricula = @matricula
+        SELECT TOP 100 id_reservacion, id_estatus, matricula, fecha, hora, id_instalacion, cantidad_personas
+        FROM reservacion
+        WHERE matricula = @matricula AND fecha >= DATEADD(MONTH, -5, GETDATE())
+        ORDER BY fecha DESC, hora DESC;
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
     ];
     return execQuery.execReadCommand(query, parameters);
-}; 
+};
 
 const updateAlumno = (alumnoData) => {
     const {
@@ -59,9 +63,9 @@ const updateAlumno = (alumnoData) => {
         WHERE matricula = @matricula
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula},
-        {name: 'imagen', type: TYPES.VarChar, value: imagen},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
+        { name: 'matricula', type: TYPES.VarChar, value: matricula },
+        { name: 'imagen', type: TYPES.VarChar, value: imagen },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -72,7 +76,7 @@ const deleteAlumno = (matricula) => {
         WHERE matricula = @matricula
     `;
     const parameters = [
-        {name: 'matricula', type: TYPES.VarChar, value: matricula}
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

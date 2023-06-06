@@ -1,6 +1,13 @@
 const execQuery = require('../helpers/execQuery');
 const TYPES = require('tedious').TYPES;
 
+/*
+
+    Por el momento los intervalos son constantes
+    y no se peuden editar, crear o borrar
+
+*/
+
 const addIntervaloTiempo = (intervaloTiempoData) => {
     const {
         id_intervalo,
@@ -11,8 +18,8 @@ const addIntervaloTiempo = (intervaloTiempoData) => {
         VALUES (@id_intervalo, @tiempo)
     `;
     const parameters = [
-        {name: 'id_intervalo', type: TYPES.Int, value: id_intervalo},
-        {name: 'tiempo', type: TYPES.Int, value: tiempo},
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
+        { name: 'tiempo', type: TYPES.Int, value: tiempo },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -35,8 +42,8 @@ const updateIntervaloTiempo = (intervaloTiempoData) => {
         WHERE id_intervalo = @id_intervalo
     `;
     const parameters = [
-        {name: 'id_intervalo', type: TYPES.Int, value: id_intervalo},
-        {name: 'tiempo', type: TYPES.Int, value: tiempo},
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo },
+        { name: 'tiempo', type: TYPES.Int, value: tiempo },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -47,7 +54,7 @@ const deleteIntervaloTiempo = (id_intervalo) => {
         WHERE id_intervalo= @id_intervalo
     `;
     const parameters = [
-        {name: 'id_intervalo', type: TYPES.Int, value: id_intervalo}
+        { name: 'id_intervalo', type: TYPES.Int, value: id_intervalo }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };

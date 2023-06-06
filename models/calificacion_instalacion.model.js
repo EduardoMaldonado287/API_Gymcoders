@@ -1,7 +1,7 @@
 const execQuery = require('../helpers/execQuery');
 const TYPES = require('tedious').TYPES;
 
-const addCalificacionInstalacion = (calificacionInstalacionData) => {        
+const addCalificacionInstalacion = (calificacionInstalacionData) => {
     const {
         id_calificacion,
         id_reservacion,
@@ -13,52 +13,65 @@ const addCalificacionInstalacion = (calificacionInstalacionData) => {
         VALUES (@id_calificacion, @id_reservacion, @calificacion, @comentarios)
     `;
     const parameters = [
-        {name: 'id_calificacion', type: TYPES.Int, value: id_calificacion},  
-        {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
-        {name: 'calificacion', type: TYPES.TinyInt, value: calificacion},    
-        {name: 'comentarios', type: TYPES.VarChar, value: comentarios},      
+        { name: 'id_calificacion', type: TYPES.Int, value: id_calificacion },
+        { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion },
+        { name: 'calificacion', type: TYPES.TinyInt, value: calificacion },
+        { name: 'comentarios', type: TYPES.VarChar, value: comentarios },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
 
-const allCalificacionInstalacion = () => {
+// Obtener las respectivas calificacoines de una instalación
+const getCalificaciones = (id_instalacion) => {
     const query = `
-        SELECT * FROM [dbo].[calificacion_instalacion]
+        SELECT ci.id_calificacion, ci.id_reservacion, ci.calificacion, ci.comentarios, r.fecha
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = @id_instalacion;
     `;
-    return execQuery.execReadCommand(query);
-};
 
-// const updateCalificacionInstalacion = (calificacionInstalacionData) => {
-//     const {
-//         id_calificacion,
-//         id_reservacion,
-//         calificacion,
-//         comentarios
-//     } = calificacionInstalacionData;
-//     const query = `
-//         UPDATE [dbo].[calificacion_instalacion]
-//         SET id_reservacion = @id_reservacion, calificacion = @calificacion, comentarios = @comentarios
-//         WHERE id_calificacion = @id_calificacion
-//     `;
-//     const parameters = [
-//         {name: 'id_calificacion', type: TYPES.Int, value: id_calificacion},  
-//         {name: 'id_reservacion', type: TYPES.Int, value: id_reservacion},
-//         {name: 'calificacion', type: TYPES.TinyInt, value: calificacion},    
-//         {name: 'comentarios', type: TYPES.VarChar, value: comentarios},      
-//     ];
-//     return execQuery.execWriteCommand(query, parameters);
-// };
-
-// Eliminar al final del proyecto
-const deleteCalificacionInstalacion = (id_calificacion) => {
-    const query = `
-        DELETE FROM [dbo].[calificacion_instalacion]
-        WHERE id_calificacion= @id_calificacion
-    `;
     const parameters = [
-        {name: 'id_calificacion', type: TYPES.Int, value: id_calificacion}   
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
     ];
-    return execQuery.execWriteCommand(query, parameters);
+
+    return execQuery.execReadCommand(query, parameters);
+}
+
+// Obtener la cantidad de veces que se repite una calificación
+const getCantidadEstrellas = (id_instalacion) => {
+    const query = `
+        SELECT ci.calificacion, COUNT(*) AS cantidad_registros
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = 1
+        GROUP BY ci.calificacion
+        ORDER BY calificacion DESC;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
+}
+
+// Obtener las calificacion promedio de una instalacion
+const getCalificacionPromedio = (id_instalacion) => {
+    const query = `
+        SELECT AVG(ci.calificacion) AS promedio_calificaciones
+        FROM Calificacion_Instalacion ci
+        JOIN Reservacion r ON ci.id_reservacion = r.id_reservacion
+        JOIN Instalacion i ON r.id_instalacion = i.id_instalacion
+        WHERE i.id_instalacion = @id_instalacion;
+    `;
+
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+
+    return execQuery.execReadCommand(query, parameters);
 };
 
 const getLastId = () => {
@@ -71,8 +84,8 @@ const getLastId = () => {
 
 module.exports = {
     addCalificacionInstalacion,
-    allCalificacionInstalacion,
-    // updateCalificacionInstalacion,
-    deleteCalificacionInstalacion,
+    getCalificaciones,
+    getCantidadEstrellas,
+    getCalificacionPromedio,
     getLastId,
 };

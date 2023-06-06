@@ -5,7 +5,7 @@ const addAdministrador = (administradorData) => {
     const {
         num_nomina,
         password,
-        nombre, 
+        nombre,
     } = administradorData;
 
     const query = `
@@ -13,9 +13,9 @@ const addAdministrador = (administradorData) => {
         VALUES (@num_nomina, @password, @nombre)
     `;
     const parameters = [
-        {name: 'num_nomina', type: TYPES.VarChar, value: num_nomina},
-        {name: 'password', type: TYPES.VarChar, value: password},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
+        { name: 'num_nomina', type: TYPES.VarChar, value: num_nomina },
+        { name: 'password', type: TYPES.VarChar, value: password },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -30,7 +30,7 @@ const allAdministrador = () => {
 const updateAdministrador = (administradorData) => {
     const {
         num_nomina,
-        nombre, 
+        nombre,
     } = administradorData;
     const query = `
         UPDATE [dbo].[Administrador]
@@ -38,8 +38,8 @@ const updateAdministrador = (administradorData) => {
         WHERE num_nomina = @num_nomina
     `;
     const parameters = [
-        {name: 'num_nomina', type: TYPES.VarChar, value: num_nomina},
-        {name: 'nombre', type: TYPES.VarChar, value: nombre},
+        { name: 'num_nomina', type: TYPES.VarChar, value: num_nomina },
+        { name: 'nombre', type: TYPES.VarChar, value: nombre },
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
@@ -50,7 +50,7 @@ const deleteAdministrador = (num_nomina) => {
         WHERE num_nomina = @num_nomina
     `;
     const parameters = [
-        {name: 'num_nomina', type: TYPES.VarChar, value: num_nomina}
+        { name: 'num_nomina', type: TYPES.VarChar, value: num_nomina }
     ];
     return execQuery.execWriteCommand(query, parameters);
 };
