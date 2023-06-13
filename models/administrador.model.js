@@ -27,6 +27,16 @@ const allAdministrador = () => {
     return execQuery.execReadCommand(query);
 };
 
+const getByIDAdministrador = async (num_nomina) => {
+    const query = `
+     SELECT num_nomina FROM [dbo].[Administrador] WHERE num_nomina = @num_nomina
+    `
+    const parameters = [
+        { name: 'num_nomina', type: TYPES.VarChar, value: num_nomina }
+    ];
+    return execQuery.execReadCommand(query, parameters);
+}
+
 const updateAdministrador = (administradorData) => {
     const {
         num_nomina,
@@ -58,6 +68,7 @@ const deleteAdministrador = (num_nomina) => {
 module.exports = {
     addAdministrador,
     allAdministrador,
+    getByIDAdministrador,
     updateAdministrador,
     deleteAdministrador,
 };

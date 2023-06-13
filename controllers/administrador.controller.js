@@ -39,6 +39,18 @@ administradorRoute.get('/', async (req, res) => {
         });
 });
 
+// Ruta para obtener info de un administrador
+administradorRoute.get('/:id', async (req, res) => {
+    const { id: num_nomina } = req.params;
+    administradorModel.getByIDAdministrador(num_nomina)
+        .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
 // Ruta para actualizar un administrador
 administradorRoute.put('/:id', async (req, res) => {
     const { id: num_nomina } = req.params;

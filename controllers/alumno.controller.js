@@ -67,6 +67,17 @@ alumnoRoute.get('/', async(req, res) => {
         });
 });
 
+alumnoRoute.get('/:matricula', async(req, res) => {
+    const {matricula: matricula} = req.params;
+    alumnoModel.findAlumno(matricula)
+        .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
 // Ruta para obtener la ultima reservacion de un alumno
 alumnoRoute.get('/:id/ultima_reservacion', async(req, res) => {
     const {id: matricula} = req.params;
