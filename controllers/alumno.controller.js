@@ -41,7 +41,7 @@ alumnoRoute.post("/login",async(req,res)=>{
     // const alumnoP = ""
     // alumnoM,alumnoP= get_values(alumno
 
-    if (matricula != alumno[0].matricula || password != alumno[0].password) {
+    if (matricula != alumno[0].matricula ) {
         res.status(401).send("usuario no identificado")
     }
  
