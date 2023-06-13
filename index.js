@@ -5,7 +5,12 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const path = require('path')
 const verifyJWT = require('./middlelwares/verifyJWT')
+const tz = 'America/Mexico_City';
+const reservacionSchedule = require('./services/reservacion_schedule');
 // juan
+
+const nodeCron = require('node-cron');
+
 const centroDeportivoController = require('./controllers/centro_deportivo.controller.js');
 const alumnoController = require('./controllers/alumno.controller.js');
 const administradorController = require('./controllers/administrador.controller.js');
@@ -56,8 +61,10 @@ app.use('/registro_gimnasio', registroGimnasioController);
 app.use('/gimnasio', gimnasioController);
 app.use('/deporte', deporteController);
 
-// app.use('/test', testController); 
-
+// QUERYES PROGRAMADOS
+const actualizar_estatus_reservaciones = nodeCron.schedule("*/30 6-22 * * *", reservacionSchedule, {
+    timezone:tz
+});
 
 
 app.listen(API_PORT, () => {

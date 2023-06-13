@@ -21,6 +21,15 @@ const allRegistroGimnasio = () => {
     const query = `
         SELECT *
         FROM Registro_Gimnasio
+        WHERE CAST(fecha AS DATE) >= DATEADD(year, -1, GETDATE())
+    `;
+    return execQuery.execReadCommand(query);
+};
+
+const todayRegistroGimnasio = () => {
+    const query = `
+        SELECT *
+        FROM Registro_Gimnasio
         WHERE CAST(fecha AS DATE) = CAST(GETDATE() AS DATE);
     `;
     return execQuery.execReadCommand(query);
@@ -65,6 +74,7 @@ const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
 module.exports = {
     addRegistroGimnasio,
     allRegistroGimnasio,
+    todayRegistroGimnasio,
     allRegistroConIntervaloFechasEstadisticas,
     topAlumnosAsistencia
 };

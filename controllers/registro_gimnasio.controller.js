@@ -28,9 +28,20 @@ registroGimnasioRoute.post('/', async (req, res) => {
         });
 });
 
-// Ruta paara obtener los registros de la tabla registro_gimnasio
-registroGimnasioRoute.get('/', async (req, res) => {
+// Ruta paara obtener los registros de todo un año 
+registroGimnasioRoute.get('/todo_el_tiempo', async (req, res) => {
     registroGimnasioModel.allRegistroGimnasio()
+        .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
+// Ruta paara obtener los registros de hoy
+registroGimnasioRoute.get('/hoy', async (req, res) => {
+    registroGimnasioModel.todayRegistroGimnasio()
         .then(data => {
             res.status(200).json({ data });
         })

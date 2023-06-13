@@ -24,7 +24,6 @@ const addReservacion = (reservacionData) => {
         ELSE
             INSERT INTO [dbo].[reservacion] (id_reservacion, id_instalacion, id_estatus, matricula, fecha, hora, duracion, cantidad_personas)
                 VALUES (@id_reservacion, @id_instalacion, 1, @matricula, @fecha, @hora, @duracion_reservacion, @cantidad_personas)
-
     `;
     const parameters = [
         { name: 'id_reservacion', type: TYPES.Int, value: id_reservacion },
@@ -92,6 +91,44 @@ const cambiarEstadoReservacion = (reservacionData) => {
     return execQuery.execWriteCommand(query, parameters);
 };
 
+// Función para cambiar el estatus de una reservacion cuando una instalacion
+// Se deshabilita, estauts = cancelado por administrador
+const cancelarReservacionPorInstalacionDeshabilitada = (id_instalacion) => {
+    const query = `
+        update Reservacion 
+        set id_estatus = 5
+        where id_estatus = 1
+        AND id_instalacion = @id_instalacion
+        AND fecha = CAST(GETDATE() AS DATE)
+    `;
+    const parameters = [
+        { name: 'id_instalacion', type: TYPES.Int, value: id_instalacion },
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
+const actualizarEstatusReservaciones = (hora_actual) => {
+    const query = `
+        UPDATE Reservacion
+        SET id_estatus = 2 
+        WHERE id_estatus = 1
+            AND fecha = CAST(GETDATE() AS DATE)
+            AND CONVERT(TIME, @HoraActual) >= hora
+            AND CONVERT(TIME, @HoraActual) <= DATEADD(MINUTE, duracion, hora)
+        
+        UPDATE Reservacion
+        SET id_estatus = 3
+        WHERE id_estatus = 2
+            AND fecha = CAST(GETDATE() AS DATE)
+            AND CONVERT(TIME, @HoraActual) >= DATEADD(MINUTE, duracion, hora)
+    `;
+    const parameters = [
+        { name: 'HoraActual', type: TYPES.VarChar, value: hora_actual },
+    ];
+    return execQuery.execWriteCommand(query, parameters);
+};
+
+
 const getLastId = () => {
     const query = `
         SELECT MAX(id_reservacion) AS lastId
@@ -105,6 +142,8 @@ module.exports = {
     allReservacion,
     getByIDreservacion,
     getDuracionReservacion,
+    cancelarReservacionPorInstalacionDeshabilitada,
     cambiarEstadoReservacion,
+    actualizarEstatusReservaciones,
     getLastId,
 };

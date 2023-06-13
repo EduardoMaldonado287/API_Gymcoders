@@ -3,6 +3,7 @@ const instalacionModel = require('../models/instalacion.model');
 const { addImage, deleteImage, uploadStrategy, config, getBlobName, containerName } = require('../helpers/imageConfig');
 const sql = require('mssql'); // Requerido para ejecutar el stored procedure de obtener Horarios Disponibles
 const { configConnection } = require('../helpers/database');
+const reservacionModel = require('../models/reservacion.model'); // Para cancelar una reservacion
 
 // Ruta para Agrega una instalacion
 // Debe existir un centro_deportivo, deporte e intervalo en la db
@@ -202,22 +203,26 @@ instalacionRoute.put('/:id', uploadStrategy, async (req, res) => {
 // Ruta para cambiar el estado de una instalacion (habilitado/deshabilitado)
 instalacionRoute.put('/:id/cambiar_estado', async (req, res) => {
     const { id: id_instalacion } = req.params;
-    instalacionModel.changeState(
-        id_instalacion
-    )
-        .then((rowCount, more) => {
-            res.status(200).json({
-                data: {
-                    rowCount,
-                    more,
-                    id_instalacion
-                },
-            });
-        })
-        .catch(error => {
-            res.status(500).json({ error });
-        });
-});
+  
+    try {
+      // Cancelar las reservaciones asociadas a la instalación deshabilitada
+      await reservacionModel.cancelarReservacionPorInstalacionDeshabilitada(id_instalacion);
+  
+      // Cambiar el estado de la instalación
+      const rowCount = await instalacionModel.changeState(id_instalacion);
+  
+      // Enviar la respuesta
+      res.status(200).json({
+        data: {
+          rowCount,
+          id_instalacion
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  });
+  
 
 // Ruta para eliminar una instalacion
 instalacionRoute.delete('/:id', async (req, res) => {

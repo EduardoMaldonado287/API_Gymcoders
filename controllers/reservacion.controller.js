@@ -1,8 +1,12 @@
 const reservacionRoute = require('express').Router();
 const reservacionModel = require('../models/reservacion.model');
+const moment = require('moment-timezone');
 
-// Ruta para agregar una reservacion, se necesita un alumno
-// e instalacion existentes para hacer el post 
+const now = moment().tz('America/Mexico_City');
+const hora_actual = now.format('HH') + ":" + now.format('mm') + ":00"
+
+// Ruta para agregar una reservacion, se necesita un alumno e
+// instalacion existentes para hacer el post 
 reservacionRoute.post('/matricula/:id/instalacion/:id_instalacion', async (req, res) => {
     try {
         // Obtener la última reservacion
@@ -91,6 +95,24 @@ reservacionRoute.put('/:id/cambiar_estatus/:nuevo_estatus', async (req, res) => 
                     more,
                     id_reservacion
                 },
+            });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
+// Ruta para actualizar el estatus de las reservaciones den el día actual
+reservacionRoute.put('/actualizar_estatus_reservaciones', async (req, res) => {
+    // Llama a la función del modelo de reservacion
+    reservacionModel.actualizarEstatusReservaciones(hora_actual)
+        .then((rowCount, more) => {
+            res.status(200).json({
+                message: "Estatus de las reservaciones actualizado",
+                // data: {
+                //     rowCount,
+                //     more,
+                // },
             });
         })
         .catch(error => {

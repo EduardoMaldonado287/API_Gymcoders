@@ -38,6 +38,20 @@ const findAlumno = async (matricula) => {
     return execQuery.execReadCommand(query, parameters);
 }
 
+// Obtener la ultima reservacion de un alumno
+const getLastReservacion = (matricula) => {
+    const query = `
+        SELECT TOP 1 r.id_reservacion from
+        Reservacion r
+        join Alumno a on a.matricula = r.matricula
+        where  a.matricula = @matricula
+    `;
+    const parameters = [
+        { name: 'matricula', type: TYPES.VarChar, value: matricula }
+    ];
+    return execQuery.execReadCommand(query, parameters);
+};
+
 const getReservaciones = (matricula) => {
     const query = `
         SELECT TOP 100 id_reservacion, id_estatus, matricula, fecha, hora, id_instalacion, cantidad_personas
@@ -85,6 +99,7 @@ module.exports = {
     addAlumno,
     allAlumno,
     getReservaciones,
+    getLastReservacion,
     updateAlumno,
     deleteAlumno,
     findAlumno
