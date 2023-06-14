@@ -74,11 +74,13 @@ const estadisticaUltimasSemanas = () => {
     const query = `
         SELECT
             'Semana ' + CAST(semana_num AS VARCHAR) AS semana,
-            COUNT(*) AS cantidad_registros
+            COUNT(*) AS cantidad_registros,
+            MIN(fecha) AS fecha_inicio,
+            MAX(fecha) AS fecha_fin
         FROM
             (
                 SELECT
-                    DATEPART(WEEK, fecha) - DATEPART(WEEK, DATEADD(WEEK, -5, GETDATE()))  AS semana_num,
+                    DATEPART(WEEK, fecha) - DATEPART(WEEK, DATEADD(WEEK, -5, GETDATE())) AS semana_num,
                     fecha
                 FROM
                     Registro_Gimnasio
@@ -89,6 +91,7 @@ const estadisticaUltimasSemanas = () => {
             semana_num
         ORDER BY
             semana_num;
+
     `;
 
     return execQuery.execReadCommand(query);
