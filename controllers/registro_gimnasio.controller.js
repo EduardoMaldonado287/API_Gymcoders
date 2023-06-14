@@ -63,6 +63,30 @@ registroGimnasioRoute.get('/estadisticas_personas_por_dia/fecha_inicial/:fecha_i
         });
 });
 
+// Ruta para obtener los datos del registro del gimnasio en un intervalo de fechas
+registroGimnasioRoute.get('/datos_registro_gimnasio/fecha_inicial/:fecha_inicial/fecha_final/:fecha_final', async (req, res) => {
+    const { fecha_inicial: fecha_inicial, fecha_final: fecha_final } = req.params
+    registroGimnasioModel.allRegistroConIntervaloFechasDescargarExcel(fecha_inicial, fecha_final)
+        .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
+
+//////////////// ESTADISTICAS GIMNASIO CANTIDAD DE PERSONAS EN LAS ULTIMAS 5 SEMANAS
+registroGimnasioRoute.get('/estadisticas_ultimas_5_semanas', async (req, res) => {
+    registroGimnasioModel.estadisticaUltimasSemanas()
+        .then(data => {
+            res.status(200).json({ data });
+        })
+        .catch(error => {
+            res.status(500).json({ error });
+        });
+});
+
 // Ruta para obtener la estadistica de los alumnos que mas asistieron 
 // al gimnasio en un intervalo específico
 registroGimnasioRoute.get('/top_asistencia_alumnos/fecha_inicial/:fecha_inicial/fecha_final/:fecha_final', async (req, res) => {

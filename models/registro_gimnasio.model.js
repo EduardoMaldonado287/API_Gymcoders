@@ -53,6 +53,47 @@ const allRegistroConIntervaloFechasEstadisticas = (fecha_inicial, fecha_final) =
     return execQuery.execReadCommand(query, parameters);
 }
 
+// Función para obtener la informacion de registros en un intervalo
+// Diseñado para ser descargado en excel
+const allRegistroConIntervaloFechasDescargarExcel = (fecha_inicial, fecha_final) => {
+    const query = `
+        SELECT fecha, matricula
+        FROM Registro_Gimnasio
+        WHERE fecha >= @fecha_inicial AND fecha <= @fecha_final
+    `;
+
+    const parameters = [
+        { name: 'fecha_inicial', type: TYPES.DateTime, value: fecha_inicial },
+        { name: 'fecha_final', type: TYPES.DateTime, value: fecha_final },
+    ];
+    return execQuery.execReadCommand(query, parameters);
+}
+
+// Diseñado para ser descargado en excel
+const estadisticaUltimasSemanas = () => {
+    const query = `
+        SELECT
+            'Semana ' + CAST(semana_num AS VARCHAR) AS semana,
+            COUNT(*) AS cantidad_registros
+        FROM
+            (
+                SELECT
+                    DATEPART(WEEK, fecha) - DATEPART(WEEK, DATEADD(WEEK, -5, GETDATE()))  AS semana_num,
+                    fecha
+                FROM
+                    Registro_Gimnasio
+                WHERE
+                    fecha >= DATEADD(WEEK, -5, GETDATE()) -- Filtrar los registros de las últimas 5 semanas
+            ) AS subquery
+        GROUP BY
+            semana_num
+        ORDER BY
+            semana_num;
+    `;
+
+    return execQuery.execReadCommand(query);
+}
+
 // Función para obtener los alumnos que más asistieron al gimnasio
 // En un intevalo de fechas específico
 const topAlumnosAsistencia = (fecha_inicial, fecha_final) => {
@@ -76,5 +117,7 @@ module.exports = {
     allRegistroGimnasio,
     todayRegistroGimnasio,
     allRegistroConIntervaloFechasEstadisticas,
+    allRegistroConIntervaloFechasDescargarExcel,
+    estadisticaUltimasSemanas,
     topAlumnosAsistencia
 };
