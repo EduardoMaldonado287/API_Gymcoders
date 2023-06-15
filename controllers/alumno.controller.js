@@ -91,7 +91,7 @@ alumnoRoute.get('/:id/ultima_reservacion', async(req, res) => {
 });
 
 // Usuario
-alumnoRoute.get('/:id/reservaciones',verifyJWT, async(req, res) => {
+alumnoRoute.get('/:id/reservaciones', async(req, res) => {
     const {id: matricula} = req.params;
     alumnoModel.getReservaciones(matricula)
         .then(data => {
