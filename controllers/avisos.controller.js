@@ -134,10 +134,10 @@ avisosRoute.delete('/:id', async (req, res) => {
     const {id: id_aviso} = req.params;
 
     // Se elimina la imagen en azure storage
-    const avisoInfo = await avisosModel.getByIDAviso(id_aviso);
-    const imageUrl = avisoInfo[0].imagen
-    const blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
-    deleteImage(blobName)
+    // const avisoInfo = await avisosModel.getByIDAviso(id_aviso);
+    // const imageUrl = avisoInfo[0].imagen
+    // const blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    // deleteImage(blobName)
 
     // Llama a la función deleteAvisos del modelo de avisos
     avisosModel.deleteAvisos(id_aviso)

@@ -184,19 +184,19 @@ centroDeportivoRoute.delete('/:id', async (req, res) => {
     const { id: id_centro_deportivo } = req.params;
 
     // Aquí se elimina la imagen de dicho centro deportivo
-    const centroDeportivoInfo = await centroDeportivoModel.getByIDcentroDeportivo(id_centro_deportivo);
-    let imageUrl = centroDeportivoInfo[0].imagen
-    let blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
-    deleteImage(blobName)
+    // const centroDeportivoInfo = await centroDeportivoModel.getByIDcentroDeportivo(id_centro_deportivo);
+    // let imageUrl = centroDeportivoInfo[0].imagen
+    // let blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    // deleteImage(blobName)
 
-    // Aqui se eliminan las imagenes de todas las instalaciones pertenecientes a dicho centro
-    const instalaciones = await centroDeportivoModel.getInstalacionesInCentroDeportivo(id_centro_deportivo)
-    for (let instalacion of instalaciones) {
-        imageUrl = instalacion.imagen
-        blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
-        deleteImage(blobName)
-        console.log(blobName)
-    }
+    // // Aqui se eliminan las imagenes de todas las instalaciones pertenecientes a dicho centro
+    // const instalaciones = await centroDeportivoModel.getInstalacionesInCentroDeportivo(id_centro_deportivo)
+    // for (let instalacion of instalaciones) {
+    //     imageUrl = instalacion.imagen
+    //     blobName = imageUrl.substring(imageUrl.indexOf('imagenes/') + 9);
+    //     deleteImage(blobName)
+    //     console.log(blobName)
+    // }
 
     // Se manda a llamar la funcion par a eliminar el centro deportivo
     centroDeportivoModel.deleteCentroDeportivo(id_centro_deportivo)
